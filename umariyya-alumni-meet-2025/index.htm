@@ -241,7 +241,7 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: #10B981; /* Green */
+            background: white; /* Green */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -249,7 +249,7 @@
         }
         
         #success-tick {
-            stroke: white;
+            stroke: #10B981;
             stroke-width: 10;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -629,7 +629,7 @@
             
             // --- Step 3: Populate success message immediately ---
             // We are using the local name and place for an instant message.
-            const welcomeText = `We're so excited to see you, <strong class="font-bold">${name}</strong>! It'll be great to catch up with everyone from <strong class="font-bold">${place}</strong>.`;
+            const welcomeText = `Thank you for registering, <strong class="font-bold">${name}</strong >from <strong class="font-bold">${place}</strong>! We're thrilled to have you at the Alumni Meet.`;
             successMessage.innerHTML = welcomeText;
             
             // 7. Clear form fields
