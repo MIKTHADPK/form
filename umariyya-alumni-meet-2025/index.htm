@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Meet Registration</title>
+    
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Load Google Fonts (Poppins & Italianno) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Italianno&display=swap" rel="stylesheet">
+    
+    <!-- 3. Custom Styles for Animations, Clock, and SVG -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Hide scrollbars during animation */
+        }
+        
+        /* Helper class to hide elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- 1. OPENING ANIMATION STYLES --- */
+
+        /* Full-screen overlay for intro */
+        #animation-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to right, #06b6d4, #0284c7); /* Blue gradient */
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* Stage 1: Logo Reveal */
+        #intro-logo {
+            width: 150px; /* Larger for intro */
+            height: 150px;
+            border-radius: 50%;
+            border: 6px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            opacity: 0; /* Start hidden */
+            object-cover: cover;
+        }
+        
+        /* 'animate-logo-reveal' class triggers this */
+        .animate-logo-reveal {
+            animation: logoReveal 1.5s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
+        }
+        @keyframes logoReveal {
+            0% {
+                opacity: 0;
+                transform: scale(3) rotate(90deg);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+                filter: blur(0);
+            }
+        }
+
+        /* Stage 2: SVG Text Draw */
+        /* REMOVED SVG STYLES */
+
+        /* NEW: Styles for HTML text animation */
+        #intro-text-container h2 {
+            font-family: 'Italianno', cursive;
+            font-size: 6rem; /* Large text */
+            line-height: 0.5; /* CHANGED */
+            color: white;
+            opacity: 0; /* Start hidden */
+        }
+        
+        /* 'animate-text-draw' class triggers this */
+        .animate-text-draw h2 {
+            /* Animate each line with a delay */
+            animation: textFadeInUp 1s ease-out forwards;
+        }
+        .animate-text-draw h2:nth-of-type(2) { animation-delay: 0.5s; }
+        .animate-text-draw h2:nth-of-type(3) { animation-delay: 1s; }
+        
+        /* NEW: Keyframes for simple text fade-in */
+        @keyframes textFadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Stage 3: Logo Move Up */
+        /* 'animate-logo-move' class triggers this */
+        .animate-logo-move {
+            /* Calculates moving from center (50vh) to final spot (-12rem above form)
+              This is a bit of a magic number, adjust if form position changes.
+              Moves it approx 32vh up from the center.
+            */
+            animation: logoMoveUp 1s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        }
+        @keyframes logoMoveUp {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-32vh);
+            }
+        }
+        
+        /* Fade out text at the same time */
+        .animate-text-fade-out {
+            animation: textFadeOut 0.5s ease-out forwards;
+        }
+        @keyframes textFadeOut {
+            to { opacity: 0; }
+        }
+        
+        /* Stage 4: Form Unmasking (NEW) */
+        #unmask-overlay {
+            position: fixed;
+            inset: 0;
+            background: #222;
+            z-index: 50;
+            opacity: 1; /* Starts visible */
+        }
+        
+        .unmask-square {
+            position: fixed;
+            width: 80vmax; /* Large squares */
+            height: 80vmax;
+            border: 6px solid white;
+            transform: rotate(45deg);
+            z-index: 51;
+            left: calc(50% - 40vmax); /* Centered */
+        }
+
+        #unmask-square-top {
+            top: -80vmax; /* Start off-screen top */
+        }
+        
+        #unmask-square-bottom {
+            bottom: -80vmax; /* Start off-screen bottom */
+        }
+        
+        /* 'animate-unmask' class triggers this */
+        .animate-unmask #unmask-square-top {
+            animation: unmaskSquareTop 1.5s cubic-bezier(0.6, 0, 0.4, 1) forwards;
+        }
+        .animate-unmask #unmask-square-bottom {
+            animation: unmaskSquareBottom 1.5s cubic-bezier(0.6, 0, 0.4, 1) forwards;
+        }
+        /* Fade out the black overlay *during* the square animation */
+        .animate-unmask #unmask-overlay {
+            animation: unmaskFadeOut 1s ease-out 0.25s forwards; /* Start fading after 0.25s */
+        }
+
+        @keyframes unmaskSquareTop {
+            from { transform: translateY(0) rotate(45deg); }
+            to { transform: translateY(200vmax) rotate(45deg); }
+        }
+        @keyframes unmaskSquareBottom {
+            from { transform: translateY(0) rotate(45deg); }
+            to { transform: translateY(-200vmax) rotate(45deg); }
+        }
+        @keyframes unmaskFadeOut {
+            to { opacity: 0; }
+        }
+        
+        /* Stage 5: Form Shake */
+        /* 'animate-form-shake' class triggers this */
+        .animate-form-shake {
+            animation: formShake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes formShake {
+          10%, 90% { transform: translate3d(-1px, 0, 0); }
+          20%, 80% { transform: translate3d(2px, 0, 0); }
+          30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+          40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* --- 2. DIGITAL CLOCK --- */
+        #digital-clock {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #555;
+            text-align: center;
+            margin-top: 0.5rem; 
+            margin-bottom: 0.5rem; /* CHANGED */
+            letter-spacing: 0.05em;
+        }
+
+        /* ADDED */
+        #form-card div h2{
+            line-height: 0.75rem;
+        }
+        
+        /* --- 3. SUBMISSION ANIMATION (AJAX) --- */
+        
+        /* Simple spinner for submit button */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-left-color: #ffffff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Full-screen success modal */
+        #success-modal {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to right, #06b6d4, #0284c7); /* Blue gradient */
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+        
+        #success-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #10B981; /* Green */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0);
+        }
+        
+        #success-tick {
+            stroke: white;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+
+        /* 'animate-success' class triggers this */
+        .animate-success #success-modal {
+            opacity: 1;
+        }
+        .animate-success #success-circle {
+            animation: circleGrow 0.5s cubic-bezier(0.25, 1, 0.5, 1) 0.2s forwards;
+        }
+        .animate-success #success-tick {
+            animation: tickDraw 0.8s ease-out 0.7s forwards;
+        }
+
+        @keyframes circleGrow {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes tickDraw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        #success-message {
+            margin-top: 2rem;
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 0 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .animate-success #success-message {
+            animation: textFadeIn 0.5s ease-out 1.5s forwards;
+        }
+        @keyframes textFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- 
+      SECTION 1: INTRO ANIMATION ELEMENTS
+    -->
+    <div id="animation-overlay">
+        <!-- Logo for intro animation -->
+        <img src="./asset/logo.png" alt="Logo" id="intro-logo" class="object-cover" onerror="this.src='https://placehold.co/150x150/ffffff/333333?text=LOGO'">
+        
+        <!-- SVG Text for intro animation -->
+        <!-- CHANGED: Replaced SVG with simple H2 tags -->
+        <div id="intro-text-container" class="text-center">
+            <h2 id="intro-text-1">Welcome</h2>
+            <h2 id="intro-text-2">to</h2>
+            <h2 id="intro-text-3">Umariyya</h2>
+        </div>
+    </div>
+
+    <!-- Shutters for unmasking animation -->
+    <div id="shutter-wrapper" class="hidden">
+      <!-- New black overlay -->
+      <div id="unmask-overlay"></div>
+      <!-- New animating squares -->
+      <div id="unmask-square-top" class="unmask-square"></div>
+      <div id="unmask-square-bottom" class="unmask-square"></div>
+    </div>
+    
+
+    <!-- 
+      SECTION 2: MAIN FORM (Initially hidden)
+    -->
+    <div id="main-container" class="flex items-center justify-center min-h-screen p-4 opacity-0">
+
+        <!-- Relative container to position the logo -->
+        <div class="relative w-full max-w-sm">
+        
+            <!-- 
+              Final Logo Position
+              - This is the logo that stays with the form
+            -->
+            <img 
+              id="form-logo"
+              src="./asset/logo.png" 
+              alt="Logo" 
+              class="absolute z-10 left-1/2 -translate-x-1/2 -top-12 w-24 h-24 rounded-full border-4 border-white shadow-lg bg-white object-cover"
+              onerror="this.src='https://placehold.co/96x96/ffffff/333333?text=LOGO'"
+            >
+
+            <!-- The Form Card -->
+            <div id="form-card" class="relative bg-white p-8 pt-20 rounded-2xl shadow-xl w-full">
+
+                <!-- Header -->
+                <div class="text-center bg-gradient-to-r from-cyan-600 to-blue-800 text-white py-4 px-6 rounded-lg shadow-md">
+                    <!-- CHANGED -->
+                    <h2 class="text-2xl font-medium tracking-wide">UMARIYYA</h2>
+                    <h1 class="text-2xl font-bold tracking-wide">ALUMNI MEET</h1>
+                </div>
+
+                <!-- Sub-Header -->
+                <h2 class="text-center text-xl font-semibold text-gray-800 mt-6 tracking-wider">
+                    REGISTRATION
+                </h2>
+                
+                <!-- Digital Clock -->
+                <div id="digital-clock">00:00:00</div>
+
+                <!-- The Form -->
+                <form class="space-y-5">
+                    
+                    <!-- Name Field -->
+                    <div>
+                        <label for="name" class="block text-base font-medium text-gray-700 mb-1">
+                          Name
+                        </label>
+                        <input 
+                          type="text" 
+                          id="name" 
+                          name="name" 
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                    
+                    <!-- Place Field -->
+                    <div>
+                        <label for="place" class="block text-base font-medium text-gray-700 mb-1">
+                          Place
+                        </label>
+                        <input 
+                          type="text" 
+                          id="place" 
+                          name="place" 
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                    
+                    <!-- WhatsApp Field -->
+                    <div>
+                        <label for="whatsapp" class="block text-base font-medium text-gray-700 mb-1">
+                          WhatsApp
+                        </label>
+                        <input 
+                          type="tel" 
+                          id="whatsapp" 
+                          name="whatsapp" 
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+
+                    <!-- Error Message Placeholder -->
+                    <p id="error-message" class="text-red-500 text-sm hidden"></p>
+
+                    <!-- Submit Button -->
+                    <button 
+                      type="button" 
+                      id="submit-button"
+                      onclick="handleSubmit()"
+                      class="w-full bg-gradient-to-r from-cyan-600 to-blue-800 text-white p-3 rounded-lg font-semibold text-lg tracking-wider shadow-md hover:from-cyan-700 hover:to-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out mt-4 flex items-center justify-center h-12"
+                    >
+                        <div id="spinner" class="spinner hidden"></div>
+                        <span id="button-text">SUBMIT</span>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- 
+      SECTION 3: SUCCESS MODAL (Initially hidden)
+    -->
+    <div id="success-modal" class="hidden">
+        <div id="success-circle">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+                <polyline id="success-tick" points="25,50 45,70 75,30" fill="none" />
+            </svg>
+        </div>
+        <div id="success-message">
+            <!-- Content set by JS -->
+        </div>
+    </div>
+
+
+    <!-- 
+      JAVASCRIPT LOGIC
+      - Handles Animation Sequencing, Clock, and Form Submission
+    -->
+    <script>
+        // --- UI Element References ---
+        const body = document.body;
+        const mainContainer = document.getElementById('main-container');
+        const formCard = document.getElementById('form-card');
+        const clockElement = document.getElementById('digital-clock');
+        
+        // Animation Elements
+        const animationOverlay = document.getElementById('animation-overlay');
+        const introLogo = document.getElementById('intro-logo');
+        /* CHANGED: Get new text container */
+        const introTextContainer = document.getElementById('intro-text-container');
+        const shutterWrapper = document.getElementById('shutter-wrapper');
+        
+        // Form Elements
+        const nameInput = document.getElementById('name');
+        const placeInput = document.getElementById('place');
+        const whatsappInput = document.getElementById('whatsapp');
+        const submitButton = document.getElementById('submit-button');
+        const spinner = document.getElementById('spinner');
+        const buttonText = document.getElementById('button-text');
+        const errorMessage = document.getElementById('error-message');
+        
+        // Success Modal Elements
+        const successModal = document.getElementById('success-modal');
+        const successMessage = document.getElementById('success-message');
+        
+        // --- NEW: URL for Google Apps Script ---
+        // PASTE YOUR URL from Google Apps Script deployment here
+        const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzE2DNJiVcbuJmCHNWuGVxAPmawgZYjF3YIqYvUOFriY-XisM1Q5XQgC3WXnPLpA8PCKA/exec';
+        
+
+        // --- 1. DIGITAL CLOCK ---
+        function startClock() {
+            function updateTime() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+            updateTime(); // Run once immediately
+            setInterval(updateTime, 1000); // Update every second
+        }
+
+        // --- 2. OPENING ANIMATION SEQUENCER ---
+        function startIntroAnimation() {
+            // Stage 1 & 2: Logo Reveal and Text Draw (Run simultaneously)
+            // CHANGED: Both animations now start at the same time.
+            introLogo.classList.add('animate-logo-reveal');
+            /* CHANGED: Animate new text container */
+            introTextContainer.classList.add('animate-text-draw');
+            
+            // Listen for the *last* text element to finish, as it's the longest animation
+            // (The text draw finishes after the logo reveal)
+            /* CHANGED: Listen to the new 3rd text element */
+            document.getElementById('intro-text-3').addEventListener('animationend', () => {
+                
+                // Stage 3: Logo Move Up & Text Fade Out
+                introLogo.classList.add('animate-logo-move');
+                /* CHANGED: Fade out new text container */
+                introTextContainer.classList.add('animate-text-fade-out');
+                
+                // FIXED: Added { once: true }
+                introLogo.addEventListener('animationend', () => {
+                    // Stage 4: Form Unmasking
+                    // Show shutters, hide blue BG, show form container (which is under shutters)
+                    shutterWrapper.classList.remove('hidden');
+                    animationOverlay.style.opacity = '0'; // Fade out blue BG
+                    mainContainer.style.opacity = '1';
+                    
+                    // Add class to animate shutters
+                    shutterWrapper.classList.add('animate-unmask');
+                    
+                    // FIXED: Added { once: true }
+                    document.getElementById('unmask-overlay').addEventListener('animationend', () => {
+                        // Stage 5: Form Shake
+                        formCard.classList.add('animate-form-shake');
+                        
+                        // Cleanup after animations
+                        animationOverlay.classList.add('hidden');
+                        shutterWrapper.classList.add('hidden');
+                        body.style.overflow = 'auto'; // Restore scrolling
+                        
+                        // FIXED: Added { once: true }
+                        formCard.addEventListener('animationend', () => {
+                            formCard.classList.remove('animate-form-shake');
+                        }, { once: true });
+                        
+                    }, { once: true });
+                    
+                }, { once: true });
+                
+            }, { once: true });
+        }
+        
+        // --- 3. GEMINI API FUNCTIONS (Added back) ---
+
+        /**
+         * Helper function to fetch with exponential backoff.
+         */
+        /* REMOVED fetchWithBackoff function */
+        
+        /**
+         * Calls the Gemini API to generate a personalized welcome message.
+         */
+        /* REMOVED generateWelcomeMessage function */
+
+        // --- 4. FORM SUBMISSION (AJAX) ---
+        async function handleSubmit() {
+            // 1. Clear old errors
+            errorMessage.classList.add('hidden');
+            nameInput.classList.remove('border-red-500');
+            placeInput.classList.remove('border-red-500');
+            whatsappInput.classList.remove('border-red-500');
+
+            // 2. Get values and validate
+            const name = nameInput.value;
+            const place = placeInput.value;
+            const whatsapp = whatsappInput.value;
+
+            let hasError = false;
+            if (!name) {
+                nameInput.classList.add('border-red-500');
+                hasError = true;
+            }
+            if (!place) {
+                placeInput.classList.add('border-red-500');
+                hasError = true;
+            }
+             if (!whatsapp) {
+                whatsappInput.classList.add('border-red-500');
+                hasError = true;
+            }
+
+            if (hasError) {
+                errorMessage.textContent = 'Please fill out all required fields.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // 3. Set loading state
+            submitButton.disabled = true;
+            spinner.classList.remove('hidden');
+            buttonText.classList.add('hidden');
+
+            // 4. NEW: Create FormData to send to Google Sheets
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('place', place);
+            formData.append('whatsapp', whatsapp);
+
+            // 5. Call Google Script
+            // We will "fire and forget" this request.
+            // This skips all error checking and waiting, making the success
+            // message appear instantly, as requested.
+            try {
+                fetch(GOOGLE_APP_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+            } catch (error) {
+                // Even if the fetch *setup* fails, we don't block the UI
+                console.warn("Could not start fetch to Google Sheets, but continuing...", error);
+            }
+
+            // --- Step 2: Show animation immediately ---
+            // The lag from Google Sheets and Gemini is now gone.
+            body.classList.add('animate-success');
+            successModal.classList.remove('hidden');
+            
+            // --- Step 3: Populate success message immediately ---
+            // We are using the local name and place for an instant message.
+            const welcomeText = `We're so excited to see you, <strong class="font-bold">${name}</strong>! It'll be great to catch up with everyone from <strong class="font-bold">${place}</strong>.`;
+            successMessage.innerHTML = welcomeText;
+            
+            // 7. Clear form fields
+            nameInput.value = '';
+            placeInput.value = '';
+            whatsappInput.value = '';
+
+            // We no longer show "Registration failed" or reset the button,
+            // as we are assuming success every time.
+        }
+
+        // --- 5. INITIALIZE ---
+        window.onload = () => {
+            startClock();
+            startIntroAnimation();
+        };
+
+    </script>
+</body>
+</html>
+
