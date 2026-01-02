@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIF Registration</title>
+    <link rel="icon" href="icon.png" type="image/png">
+
+    <meta property="og:title" content="ALIF Registration Form" />
+    <meta property="og:description" content="Alburhan Inter Campus Fest" />
+    <meta property="og:image" content="https://mikthadpk.github.io/form/alif-registration-form/Registration-Thumb.png" />
+    <meta property="og:url" content="https://mikthadpk.github.io/form/alif-registration-form/" />
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { text-align: center; color: #333; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        
+        /* Image Upload Area */
+        .img-preview-box { width: 100%; height: 200px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; margin-top: 10px; cursor: pointer; background: #fafafa; overflow: hidden; position: relative; }
+        .img-preview-box img { max-width: 100%; display: none; }
+        .img-preview-text { color: #888; pointer-events: none; }
+        
+        button { width: 100%; padding: 12px; background: #6c5ce7; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { background: #5b4bc4; }
+        button:disabled { background: #ccc; }
+
+        /* Modal for Cropping */
+        .modal { display: none; position: fixed; z-index: 99; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+        .modal-content { position: relative; margin: 5% auto; width: 90%; max-width: 600px; background: #fff; padding: 10px; border-radius: 8px; }
+        .img-container { height: 400px; background: #333; }
+        .img-container img { max-width: 100%; }
+        
+        .controls { display: flex; gap: 10px; margin-top: 10px; }
+        .controls button { background: #0984e3; flex: 1; }
+        .controls button.cancel { background: #d63031; }
+        .controls button.rotate { background: #fdcb6e; color: #333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎨 ALIF Registration</h2>
+    <form id="registerForm">
+        
+        <div class="form-group">
+            <label>Chest Number</label>
+            <input type="text" id="chestNo" name="chestNo" placeholder="e.g. 101" required>
+        </div>
+
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Participant Name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Place</label>
+            <input type="text" id="place" name="place" placeholder="Place" required>
+        </div>
+
+        <div class="form-group">
+            <label>Team / Campus</label>
+            <select id="team" name="team" required>
+                <option value="" disabled selected>Select your Campus</option>
+                <option value="SHATHWIBA">SHATHWIBA</option>
+                <option value="SHIRAZ">SHIRAZ</option>
+                <option value="BUKHARA">BUKHARA</option>
+                <option value="AL-AZEEZIYYA">AL-AZEEZIYYA - BHARANIKKAVU</option>
+                <option value="MOULANA AL-AZEEZIYYA">MOULANA AZEEZIYYA -  CHAMAVILA</option>
+                <option value="AL MADEENA">AL MADEENA PALLIKKAL</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Participant Photo</label>
+            <div class="img-preview-box" onclick="document.getElementById('fileInput').click()">
+                <span class="img-preview-text">Click to upload photo</span>
+                <img id="finalPreview" src="">
+            </div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <input type="hidden" id="imageBase64" required>
+        </div>
+
+        <button type="submit" id="submitBtn">Register Participant</button>
+    </form>
+</div>
+
+<div id="cropModal" class="modal">
+    <div class="modal-content">
+        <div class="img-container">
+            <img id="imageToCrop" src="">
+        </div>
+        <div class="controls">
+            <button class="rotate" type="button" onclick="cropper.rotate(-90)">↺</button>
+            <button class="rotate" type="button" onclick="cropper.rotate(90)">↻</button>
+            <button class="cancel" type="button" onclick="closeModal()">Cancel</button>
+            <button type="button" onclick="cropImage()">Crop & Save</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<script>
+    // --- CONFIGURATION ---
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWFdBc5-hYkMektEquaaLq3U36t4nUrFpWDif32lir97KoAPMtSJuYQnVACmCV8kWS/exec'; // <--- PASTE YOUR GOOGLE SCRIPT URL HERE
+
+    // --- VARIABLES ---
+    let cropper;
+    const fileInput = document.getElementById('fileInput');
+    const modal = document.getElementById('cropModal');
+    const imageToCrop = document.getElementById('imageToCrop');
+    const finalPreview = document.getElementById('finalPreview');
+    const previewText = document.querySelector('.img-preview-text');
+    const base64Input = document.getElementById('imageBase64');
+
+    // --- 1. HANDLE IMAGE SELECTION ---
+    fileInput.addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imageToCrop.src = event.target.result;
+                modal.style.display = "block";
+                
+                // Initialize Cropper
+                if(cropper) cropper.destroy();
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 3 / 4,  // FORCE 3:4 RATIO
+                    viewMode: 1,
+                    autoCropArea: 1,
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // --- 2. CROP AND ROTATE LOGIC ---
+    function closeModal() {
+        modal.style.display = "none";
+        fileInput.value = ""; // Reset input
+        if(cropper) cropper.destroy();
+    }
+
+    function cropImage() {
+        const canvas = cropper.getCroppedCanvas({
+            width: 600,  // Resize width (optional optimization)
+            height: 800  // Resize height based on 3:4
+        });
+
+        // Convert to Base64
+        const base64Image = canvas.toDataURL("image/png");
+        
+        // Show Preview
+        finalPreview.src = base64Image;
+        finalPreview.style.display = "block";
+        previewText.style.display = "none";
+        
+        // Store in hidden input for submission
+        base64Input.value = base64Image;
+        
+        closeModal();
+    }
+
+    // --- 3. HANDLE FORM SUBMISSION ---
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const chestNo = document.getElementById('chestNo').value;
+        const name = document.getElementById('name').value;
+        const place = document.getElementById('place').place;
+        const team = document.getElementById('team').value;
+        const image = document.getElementById('imageBase64').value;
+
+        if(!image) {
+            alert("Please upload and crop a photo.");
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Uploading to Server...";
+
+        // Prepare Data
+        const payload = {
+            chestNo: chestNo,
+            name: name,
+            place: place,
+            team: team,
+            image: image,
+            mimeType: "image/png"
+        };
+
+        // Send to Google Apps Script
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.result === "success") {
+                alert("Registration Successful!");
+                location.reload(); // Refresh page
+            } else {
+                alert("Error: " + data.error);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Register Participant";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Submission failed. Check console.");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Register Participant";
+        });
+    });
+</script>
+
+</body>
+</html>
