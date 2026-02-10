@@ -27,8 +27,8 @@ body{
   background:linear-gradient(135deg,#2ec4b6,#4cc9f0);
   color:#fff;border-radius:16px;padding:18px;text-align:center;margin-bottom:15px;
 }
-.header h1{margin:0;font-size:20px}
-.header p{margin:6px 0;font-size:13px}
+.header h1{margin:0;font-size:21px}
+.header p{margin:0px 0;font-size:13px}
 
 h2{text-align:center;margin:10px 0 15px}
 
@@ -68,6 +68,42 @@ button, .btn{
 }
 
 .highlight{color:#2ec4b6;font-weight:600}
+
+.footer{
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #555;
+}
+
+.footer-img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid #2ec4b6;
+}
+
+.footer-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.footer-text a{
+  color: #2ec4b6;
+  text-decoration: none;
+  font-weight: 600;
+}
+.footer-text a:hover{
+  text-decoration: underline;
+}
+
 </style>
 </head>
 <body>
@@ -111,7 +147,8 @@ button, .btn{
       <label><input type="radio" name="entry.833504182" value="Pravasi"> Pravasi</label>
       <label>
         <input type="radio" name="entry.833504182" value="__other_option__"> Other
-              <input type="text" name="entry.833504182.other_option_response" placeholder="Type Your Job Name" style="border: none; border-bottom: 1px solid #ddd; border-radius: 0;">
+              <input type="text" id="otherJobInput" name="entry.833504182.other_option_response" placeholder="Type Your Job Name" disabled style="border: none; border-bottom: 1px solid #ddd; border-radius: 0;">
+
       </label>
 
     </div>
@@ -138,10 +175,35 @@ button, .btn{
   <div class="check"></div>
   <h3 id="thanksText" class="highlight"></h3>
 </div>
-
+<div class="footer">
+  <div class="footer-img">
+    <!-- Replace photo.jpg with your image file -->
+    <img src="https://mikthadpk.github.io/profile-frames/avatar.jpg" alt="Developer">
+  </div>
+  <div class="footer-text">
+    <div>Developed by: <b>Miqdad Sa-adi Al-Afzali</b></div>
+    <div>
+      To customize your form, please contact us at
+      <a href="https://wa.me/918592957033" target="_blank">+91 85929 57033</a>
+    </div>
+  </div>
+</div>
 </div>
 
+
+
+
 <script>
+
+  // Enable/disable "Other" job input based on radio selection
+$('input[name="entry.833504182"]').on('change', function () {
+  if ($(this).val() === "__other_option__") {
+    $('#otherJobInput').prop('disabled', false).focus();
+  } else {
+    $('#otherJobInput').prop('disabled', true).val('');
+  }
+});
+
 $('#bootstrapForm').submit(function (event) {
   event.preventDefault();
 
