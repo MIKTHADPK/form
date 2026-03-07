@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Convocation Gown Measurement Form</title>
+
+       <meta property="og:title" content="Umariyya Convocation Gown Measurement Form" />
+    <meta property="og:description" content="Umariyya Charitable Centre, Vallivatton" />
+    <meta property="og:image" content="https://mikthadpk.github.io/form/umariyya-convocation-gown/asset/thumbnail.png" />
+    <meta property="og:url" content="https://mikthadpk.github.io/form/alif-registration-form/" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --primary: #002D62; /* Academic Blue */
+            --secondary: #D4AF37; /* Convocation Gold */
+            --bg: #F5F7FA;
+            --text: #333;
+            --whatsapp: #25D366;
+            --success: #28a745;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Container & Layout */
+        .wrapper {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        /* Header & Logo */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: -30px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #eee;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eee;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Form Sections */
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--secondary);
+            display: inline-block;
+        }
+
+        /* Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper.unit-in::after {
+            content: 'In';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 16px; /* Prevents auto-zoom on iOS */
+            transition: border-color 0.3s;
+        }
+
+        .input-wrapper.unit-in input {
+            padding-right: 40px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        /* Measurement Grid */
+        .measurement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Buttons */
+        .button-group {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #001f42;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--primary);
+            border: 2px solid #eee;
+        }
+
+        .btn-whatsapp {
+            background: var(--whatsapp);
+            color: #fff;
+            margin-top: 15px;
+        }
+
+        .btn-whatsapp svg {
+            fill: #fff;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Summary Screen */
+        .summary-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .summary-header {
+            color: var(--success);
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .separator {
+            border: 0;
+            border-top: 2px dashed #eee;
+            margin: 20px 0;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-table th {
+            color: #666;
+            font-weight: 600;
+            width: 40%;
+        }
+
+        .summary-table td {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Mobile Specific Optimization */
+        @media (max-width: 600px) {
+            .wrapper {
+                margin: 0;
+                border-radius: 0;
+                padding: 20px;
+            }
+
+            .logo {
+                max-width: 120px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .measurement-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Floating Help Button */
+.floating-help {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: var(--whatsapp);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+}
+
+.floating-help:hover {
+    transform: scale(1.1);
+}
+
+.floating-help svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+}
+
+/* Tooltip for Help Button */
+.help-tooltip {
+    position: fixed;
+    bottom: 35px;
+    right: 95px;
+    background: #333;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+/* Phone Input with Country Code */
+.phone-container {
+    display: flex;
+    gap: 8px;
+}
+
+.country-code {
+    width: 100px !important;
+    background-color: #f9f9f9;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 0 5px;
+    font-size: 14px;
+}
+
+/*Footer*/
+.footer{
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #555;
+}
+
+.footer-img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--secondary);
+}
+
+.footer-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.footer-text a{
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.footer-text a:hover{
+  text-decoration: underline;
+}
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <header>
+        <img src="https://mikthadpk.github.io/form/umariyya-alumni-meet-2025/asset/logo.png?text=LOGO" alt="Institution Logo" class="logo">
+        <h1>Gown Measurement Form</h1>
+        <p>Umariyya Convocation Ceremony - 2026</p>
+    </header>
+
+    <div class="step-indicator">
+        <div class="step active" id="step1-ring">1</div>
+        <div class="step" id="step2-ring">2</div>
+    </div>
+
+    <form id="gownForm">
+        
+        <div class="form-section active" id="section1">
+            <h2>Graduand Details</h2>
+            
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label for="place">Place</label>
+                <input type="text" id="place" name="place" required placeholder="e.g., Hostel A or City Name">
+            </div>
+
+            <div class="form-group">
+    <label for="mobile">Mobile No. (WhatsApp Enabled)</label>
+    <div class="phone-container">
+        <select class="country-code" id="dialCode">
+            <option value="91" selected>🇮🇳 +91 (India)</option>
+<option value="971">🇦🇪 +971 (UAE)</option>
+<option value="966">🇸🇦 +966 (Saudi Arabia)</option>
+<option value="968">🇴🇲 +968 (Oman)</option>
+<option value="974">🇶🇦 +974 (Qatar)</option>
+<option value="965">🇰🇼 +965 (Kuwait)</option>
+<option value="973">🇧🇭 +973 (Bahrain)</option>
+<option value="962">🇯🇴 +962 (Jordan)</option>
+<option value="20">🇪🇬 +20 (Egypt)</option>
+<option value="92">🇵🇰 +92 (Pakistan)</option>
+<option value="880">🇧🇩 +880 (Bangladesh)</option>
+<option value="94">🇱🇰 +94 (Sri Lanka)</option>
+<option value="60">🇲🇾 +60 (Malaysia)</option>
+<option value="65">🇸🇬 +65 (Singapore)</option>
+<option value="61">🇦🇺 +61 (Australia)</option>
+<option value="64">🇳🇿 +64 (New Zealand)</option>
+<option value="81">🇯🇵 +81 (Japan)</option>
+<option value="82">🇰🇷 +82 (South Korea)</option>
+<option value="86">🇨🇳 +86 (China)</option>
+<option value="62">🇮🇩 +62 (Indonesia)</option>
+<option value="63">🇵🇭 +63 (Philippines)</option>
+<option value="44">🇬🇧 +44 (UK)</option>
+<option value="49">🇩🇪 +49 (Germany)</option>
+<option value="33">🇫🇷 +33 (France)</option>
+<option value="39">🇮🇹 +39 (Italy)</option>
+<option value="34">🇪🇸 +34 (Spain)</option>
+<option value="41">🇨🇭 +41 (Switzerland)</option>
+<option value="31">🇳🇱 +31 (Netherlands)</option>
+<option value="353">🇮🇪 +353 (Ireland)</option>
+<option value="46">🇸🇪 +46 (Sweden)</option>
+<option value="47">🇳🇴 +47 (Norway)</option>
+<option value="90">🇹🇷 +90 (Turkey)</option>
+<option value="1">🇺🇸 +1 (USA)</option>
+<option value="1">🇨🇦 +1 (Canada)</option>
+<option value="55">🇧🇷 +55 (Brazil)</option>
+<option value="234">🇳🇬 +234 (Nigeria)</option>
+<option value="27">🇿🇦 +27 (South Africa)</option>
+<option value="254">🇰🇪 +254 (Kenya)</option>
+            </select>
+        <input type="tel" id="mobile" name="mobile" required placeholder="9876543210" pattern="[0-9]{10}">
+    </div>
+</div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="nextSection()">Next: Measurement</button>
+            </div>
+        </div>
+
+        <div class="form-section" id="section2">
+            <h2>Gown Measurement</h2>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Please provide all measurements in <strong>Inches (In)</strong>.</p>
+            
+            <div class="measurement-grid">
+                <div class="form-group">
+                    <label for="length">Length</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="length" name="length" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="shoulder">Shoulder</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="shoulder" name="shoulder" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sleeve">Sleeve</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="sleeve" name="sleeve" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="chest">Chest</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="chest" name="chest" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="hip">Hip</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="hip" name="hip" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="seat">Seat</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="seat" name="seat" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="armhole">Arm Hole</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="armhole" name="armhole" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="collar">Collar</label>
+                    <div class="input-wrapper unit-in">
+                        <input type="number" id="collar" name="collar" required step="0.01" placeholder="0.0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Submit Measurement</button>
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">Back</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="summary-screen" id="summaryScreen">
+        <div class="summary-header">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h3>Submission Successful!</h3>
+            <p style="color: #666; font-size: 14px; margin-top: 5px;">Your measurement has been recorded.</p>
+        </div>
+
+        <hr class="separator">
+
+        <table class="summary-table" id="summaryTable"></table>
+
+        <div class="button-group">
+            <button type="button" class="btn btn-primary" onclick="downloadPDF()">Download as PDF (Receipt)</button>
+        </div>
+    </div>
+    <!--Footer - MPK Brandign -->
+<div class="footer">
+  <div class="footer-img">
+    <img src="https://mikthadpk.github.io/profile-frames/avatar.jpg" alt="Developer">
+  </div>
+  <div class="footer-text">
+    <div>Developed by: <b>Miqdad Sa-adi Al-Afzali</b></div>
+    <div>
+      To customize your form, please contact us at
+      <a href="https://wa.me/918592957033" target="_blank">+91 85929 57033</a>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div class="help-tooltip">Need Tyler's Help?</div>
+<a href="https://wa.me/919994519846" target="_blank" class="floating-help" title="Contact Tailor">
+    <svg viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.56 5.338-11.898 11.898-11.898 3.18 0 6.17 1.24 8.419 3.488 2.248 2.248 3.488 5.239 3.488 8.419 0 6.561-5.338 11.899-11.898 11.899-1.993 0-3.952-.5-5.71-1.442l-6.396 1.687zm6.315-4.03l.351.208c1.652.978 3.56 1.493 5.517 1.493 5.922 0 10.741-4.819 10.741-10.741 0-2.868-1.117-5.564-3.143-7.59-2.025-2.026-4.721-3.142-7.59-3.142-5.922 0-10.741 4.819-10.741 10.741 0 1.956.516 3.864 1.494 5.517l.208.351-1.11 4.053 4.162-1.099zM17.618 14.93c-.33-.165-1.956-.965-2.257-1.076-.301-.11-.522-.165-.742.165-.221.33-.854 1.076-1.046 1.296-.192.221-.384.248-.714.083-.33-.165-1.393-.513-2.653-1.636-.98-.873-1.641-1.953-1.833-2.283-.192-.33-.02-.509.145-.673.149-.148.33-.386.495-.579.165-.192.22-.33.33-.55.11-.22.055-.413-.028-.579-.083-.165-.742-1.791-1.018-2.454-.268-.647-.541-.56-.742-.57-.192-.01-.413-.012-.633-.012-.22 0-.578.083-.88.413-.302.33-1.155 1.128-1.155 2.75s1.183 3.193 1.348 3.413c.165.22 2.327 3.55 5.636 4.978.787.34 1.4.544 1.88.699.79.25 1.51.215 2.079.13.633-.094 1.956-.799 2.232-1.57.275-.772.275-1.432.192-1.57-.083-.138-.302-.22-.633-.385z"/></svg>
+</a>
+
+<script>
+    // --- SECTION NAVIGATION ---
+    const gownForm = document.getElementById('gownForm');
+    const section1 = document.getElementById('section1');
+    const section2 = document.getElementById('section2');
+    const step1Ring = document.getElementById('step1-ring');
+    const step2Ring = document.getElementById('step2-ring');
+    const summaryScreen = document.getElementById('summaryScreen');
+
+    function nextSection() {
+        const inputs = section1.querySelectorAll('input[required]');
+        let valid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                valid = false;
+            }
+        });
+
+        if (valid) {
+            section1.classList.remove('active');
+            section2.classList.add('active');
+            step2Ring.classList.add('active');
+        }
+    }
+
+    function prevSection() {
+        section2.classList.remove('active');
+        section1.classList.add('active');
+        step2Ring.classList.remove('active');
+    }
+
+    // --- FORM SUBMISSION HANDLING ---
+    const summaryTable = document.getElementById('summaryTable');
+
+    gownForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent page reload
+
+        // In a real scenario, you would send this data to Google Sheets here.
+
+        // Generate the summary screen data
+        const formData = new FormData(gownForm);
+        let tableHTML = '';
+
+        // Labels mapping for beautiful display
+        const labels = {
+            'name': 'Name',
+            'place': 'Place/Hostel',
+            'mobile': 'Mobile No.',
+            'length': 'Gown Length',
+            'shoulder': 'Shoulder',
+            'sleeve': 'Sleeve',
+            'chest': 'Chest',
+            'hip': 'Hip',
+            'seat': 'Seat',
+            'armhole': 'Arm Hole',
+            'collar': 'Collar'
+        };
+
+        // Populate Table
+        let count = 0;
+        for (let [key, value] of formData.entries()) {
+            if(count === 3) { // Insert dashed line before measurements
+                 tableHTML += `<tr><td colspan="2"><hr class="separator" style="margin: 10px 0;"></td></tr>`;
+            }
+
+            const unit = (count >= 3) ? ' In' : ''; // Add "In" only for measurements
+            tableHTML += `
+                <tr>
+                    <th>${labels[key]}</th>
+                    <td>${value}${unit}</td>
+                </tr>
+            `;
+            count++;
+        }
+        
+        summaryTable.innerHTML = tableHTML;
+
+        // Hide form, show summary
+        document.querySelector('header').style.display = 'none';
+        document.querySelector('.step-indicator').style.display = 'none';
+        gownForm.style.display = 'none';
+        summaryScreen.style.display = 'block';
+    });
+
+
+// Add this inside your <script> tag in index.html
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2i4b6iY9jDUgEvCNfq4ZyF7bk85yXGdlou6RrAmN2isEDgHNLM4T-DfKkus2LVrSL1g/exec";
+
+gownForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Gather data into an object
+    const formData = new FormData(gownForm);
+    const dataObj = Object.fromEntries(formData.entries());
+    dataObj.dialCode = document.getElementById('dialCode').value;
+
+    // Send to Google Sheets
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(dataObj)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if(result.result === "success") {
+            // Show summary screen and allow PDF download
+            showSummary(result.id); 
+        } else {
+            alert(result.message); // Shows duplicate error
+        }
+    });
+});
+
+    // --- PDF GENERATION ---
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const formData = new FormData(gownForm);
+        const name = formData.get('name');
+
+        doc.setFontSize(20);
+        doc.setTextColor(0, 45, 98); // Academic Blue
+        doc.text("Convocation Gown", 105, 20, null, null, "center");
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text("Institution Convocation Ceremony", 105, 28, null, null, "center");
+
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(212, 175, 55); // Gold line
+        doc.line(20, 35, 190, 35);
+
+        // Basic Info section
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text("Basic Details", 20, 45);
+
+        const basicInfo = [
+            ["Name:", formData.get('name')],
+            ["Place/Hostel:", formData.get('place')],
+            ["Mobile No.:", formData.get('mobile')]
+        ];
+
+        doc.autoTable({
+            startY: 50,
+            margin: { left: 20 },
+            body: basicInfo,
+            theme: 'plain',
+            styles: { fontSize: 12, cellPadding: 3 },
+            columnStyles: { 0: { fontStyle: 'bold', textColor: [100], width: 50 } }
+        });
+
+        // Separator line
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(238); // Grey light
+        doc.line(20, doc.lastAutoTable.finalY + 10, 190, doc.lastAutoTable.finalY + 10);
+
+        // Measurement Section
+        doc.setFontSize(14);
+        doc.text("Gown Measurements (Inches)", 20, doc.lastAutoTable.finalY + 25);
+
+        const measurements = [
+            ["Length", formData.get('length')],
+            ["Shoulder", formData.get('shoulder')],
+            ["Sleeve", formData.get('sleeve')],
+            ["Chest", formData.get('chest')],
+            ["Hip", formData.get('hip')],
+            ["Seat", formData.get('seat')],
+            ["Arm Hole", formData.get('armhole')],
+            ["Collar", formData.get('collar')]
+        ];
+
+        doc.autoTable({
+            startY: doc.lastAutoTable.finalY + 30,
+            margin: { left: 20 },
+            head: [['Component', 'Size (In)']],
+            body: measurements,
+            theme: 'striped',
+            headStyles: { fillcolor: [0, 45, 98], textColor: [255] },
+            styles: { fontSize: 11 },
+            columnStyles: { 0: { width: 80 }, 1: { fontStyle: 'bold' } }
+        });
+
+        // Save PDF
+        doc.save(`Gown_Receipt_${name.replace(/\s+/g, '_')}.pdf`);
+    }
+    
+    
+    function downloadPDF() {
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Grab data from the form fields directly to ensure accuracy
+        const name = document.getElementById('name').value || "Graduand";
+        const place = document.getElementById('place').value;
+        const dialCode = document.getElementById('dialCode').value;
+        const mobile = document.getElementById('mobile').value;
+
+        // PDF Header
+        doc.setFontSize(30);
+        doc.setTextColor(0, 45, 98); // Academic Blue
+        doc.text("UMARIYYA", 105, 20, null, null, "center");
+
+        doc.setFontSize(22);
+        doc.setTextColor(0, 45, 98); // Academic Blue
+        doc.text("CONVOCATION GOWN RECEIPT", 105, 28, null, null, "center");
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text("Generated on: " + new Date().toLocaleString(), 105, 32, null, null, "center");
+
+        // Gold Divider
+        doc.setDrawColor(212, 175, 55); 
+        doc.setLineWidth(1);
+        doc.line(20, 35, 190, 35);
+
+        // Section 1: Personal Details
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text("Graduand Details", 20, 48);
+
+        const personalData = [
+            ["Full Name", name],
+            ["Location", place],
+            ["Contact", dialCode + " " + mobile]
+        ];
+
+        doc.autoTable({
+            startY: 53,
+            body: personalData,
+            theme: 'plain',
+            styles: { fontSize: 12, cellPadding: 2 },
+            columnStyles: { 0: { fontStyle: 'bold', width: 40 } }
+        });
+
+        // Section 2: Measurements
+        doc.text("Measurements (Inches)", 20, doc.lastAutoTable.finalY + 15);
+
+        const measurementData = [
+            ["Length", document.getElementById('length').value + " In"],
+            ["Shoulder", document.getElementById('shoulder').value + " In"],
+            ["Sleeve", document.getElementById('sleeve').value + " In"],
+            ["Chest", document.getElementById('chest').value + " In"],
+            ["Hip", document.getElementById('hip').value + " In"],
+            ["Seat", document.getElementById('seat').value + " In"],
+            ["Arm Hole", document.getElementById('armhole').value + " In"],
+            ["Collar", document.getElementById('collar').value + " In"]
+        ];
+
+        doc.autoTable({
+            startY: doc.lastAutoTable.finalY + 20,
+            head: [['Component', 'Size']],
+            body: measurementData,
+            headStyles: { fillColor: [0, 45, 98] },
+            alternateRowStyles: { fillColor: [245, 247, 250] }
+        });
+
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text("Please Send PDF to Noufal Saquafi Pathiyassery: +919846155154.", 105, doc.lastAutoTable.finalY + 20, null, null, "center");
+
+        // Save the file
+        doc.save(`Gown_Receipt_${name.replace(/\s+/g, '_')}.pdf`);
+
+    } catch (error) {
+        console.error("PDF Generation Error:", error);
+        alert("Sorry, there was an error generating your PDF. Please take a screenshot of the summary page instead.");
+    }
+}
+</script>
+
+</body>
+</html>
