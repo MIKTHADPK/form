@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Registration | UMARIYYA</title>
+
+    <meta property="og:title" content="Umariyya Convocation Volunteer Registration Form" />
+    <meta property="og:description" content="Umariyya Charitable Centre, Vallivattom" />
+    <meta property="og:image" content="https://mikthadpk.github.io/form/volunteer_registraion_form/asset/thumbnail.png" />
+    <meta property="og:url" content="https://mikthadpk.github.io/form/volunteer_registraion_form/" />
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+
+    <style>
+        :root { --primary: #2596be; --dark: #272b72; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
+        
+        .container { 
+            background: white; width: 100%; max-width: 450px; padding: 25px; 
+            border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center;
+        }
+
+        .logo { 
+            max-width: 140px; 
+            margin-bottom: -35px; /* Applied your specific margin */
+            position: relative; z-index: 1;
+        }
+
+        h2 { color: var(--dark); position: relative; z-index: 2; margin-top: 0; margin-bottom:0; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-size: 0.85rem; font-weight: bold; color: var(--dark); margin-bottom: 5px; }
+        p {margin-top: 0;}
+        
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid #ccc; 
+            border-radius: 8px; box-sizing: border-box; 
+        }
+
+        /* Photo UI */
+        #upload-demo { width: 100%; margin: 10px 0; border-radius: 10px; overflow: hidden; }
+        .controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .btn-small { background: #eee; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; }
+
+        .submit-btn { 
+            background: var(--dark); color: white; border: none; width: 100%; 
+            padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem;
+        }
+
+        #success-screen { display: none; }
+        .submitted-info { background: #f9f9f9; padding: 15px; border-radius: 10px; text-align: left; margin: 15px 0; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="container animate__animated animate__fadeIn">
+    <div id="form-wrapper">
+        <img src="https://mikthadpk.github.io/form/umariyya-alumni-meet-2025/asset/logo.png" alt="Logo" class="logo">
+        <h2>UMARIYYA</h2>
+        <p style="color: #666; margin-bottom: 20px;">Convocation & 33rd Anniversary</p>
+        <h3 style="text-decoration: underline; color: #2596be; ">VOLUNTEER REGISTRATION</h3>
+
+        <form id="regForm">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" required>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex:1">
+                    <label>DOB</label>
+                    <input type="date" id="dob" required>
+                </div>
+                <div class="form-group" style="flex:1">
+                    <label>Place</label>
+                    <input type="text" id="place" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <div style="display: flex; gap: 5px;">
+                    <select id="code" style="width: 90px;">
+                        <option value="+91">91</option>
+                        <option value="+971">971</option>
+                    </select>
+                    <input type="tel" id="phone" required style="flex:1">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Passport Photo (Rotate/Zoom to fit)</label>
+                <input type="file" id="upload" accept="image/*" required style="font-size: 0.8rem;">
+                <div id="upload-demo"></div>
+                <div class="controls">
+                    <button type="button" class="btn-small" onclick="vCrop.rotate(-90)">Rotate Left</button>
+                    <button type="button" class="btn-small" onclick="vCrop.rotate(90)">Rotate Right</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="sBtn">Submit Registration</button>
+        </form>
+    </div>
+
+    <div id="success-screen" class="animate__animated animate__zoomIn">
+        <div style="font-size: 50px; color: #4CAF50;">✓</div>
+        <h2 style="color: var(--primary);">Registration Sent!</h2>
+        <p>Thank you for volunteering for the ceremony.</p>
+        <div class="submitted-info" id="summary"></div>
+        <button class="submit-btn" style="background: var(--primary);" onclick="location.reload()">New Entry</button>
+    </div>
+</div>
+
+<script>
+    // 1. YOUR APPS SCRIPT URL HERE
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz5M-6TReIuDFCjk34wSq8Oap39bRbSTLsx-BzKH70XDe9j6sCUkV0h2Y4S1IgVUy4vSw/exec';
+
+    // Initialize Cropper (3:4 Ratio)
+    var vCrop = new Croppie(document.getElementById('upload-demo'), {
+        viewport: { width: 150, height: 200 }, 
+        boundary: { width: '100%', height: 250 },
+        showZoomer: true,
+        enableOrientation: true
+    });
+
+    document.getElementById('upload').addEventListener('change', function() {
+        var reader = new FileReader();
+        reader.onload = function(e) { vCrop.bind({ url: e.target.result }); }
+        reader.readAsDataURL(this.files[0]);
+    });
+
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('sBtn');
+        btn.innerText = "Submitting...";
+        btn.disabled = true;
+
+        vCrop.result({type: 'base64', size: {width: 600, height: 800}, format: 'png'}).then(function(imgBase64) {
+            const data = {
+                name: document.getElementById('name').value,
+                dob: document.getElementById('dob').value,
+                place: document.getElementById('place').value,
+                countryCode: document.getElementById('code').value,
+                mobile: document.getElementById('phone').value,
+                photo: imgBase64
+            };
+
+            // Fire and Forget (no-cors)
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                body: JSON.stringify(data)
+            });
+
+            // Immediately show success without waiting for server verification
+            setTimeout(() => {
+                document.getElementById('form-wrapper').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'block';
+                document.getElementById('summary').innerHTML = `
+                    <b>Volunteer:</b> ${data.name}<br>
+                    <b>Mobile:</b> ${data.countryCode} ${data.mobile}<br>
+                    <b>From:</b> ${data.place}
+                `;
+            }, 800);
+        });
+    });
+</script>
+
+</body>
+</html>
