@@ -255,11 +255,62 @@
             }
         }
 
-        viewport.onwheel = (e) => { e.preventDefault(); scale *= (e.deltaY > 0 ? 0.9 : 1.1); updateUI(); };
-        const start = (e) => { isDragging = true; const c = e.touches ? e.touches[0] : e; startX = c.clientX - posX; startY = c.clientY - posY; };
-        const move = (e) => { if (!isDragging) return; e.preventDefault(); const c = e.touches ? e.touches[0] : e; posX = c.clientX - startX; posY = c.clientY - startY; updateUI(); };
-        viewport.onmousedown = start; window.onmousemove = move; window.onmouseup = () => isDragging = false;
-        viewport.ontouchstart = start; viewport.ontouchmove = move; viewport.ontouchend = () => isDragging = false;
+        let lastDist = 0;
+
+const start = (e) => {
+    isDragging = true;
+    if (e.touches && e.touches.length === 2) {
+        // Initialize distance for pinch zoom
+        lastDist = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+        );
+    } else {
+        // Standard drag (mouse or single finger)
+        const c = e.touches ? e.touches[0] : e;
+        startX = c.clientX - posX;
+        startY = c.clientY - posY;
+    }
+};
+
+const move = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    if (e.touches && e.touches.length === 2) {
+        // Pinch Zoom Logic
+        const dist = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+        );
+        if (lastDist > 0) {
+            scale *= (dist / lastDist);
+        }
+        lastDist = dist;
+    } else if (!e.touches || e.touches.length === 1) {
+        // Drag Logic
+        const c = e.touches ? e.touches[0] : e;
+        posX = c.clientX - startX;
+        posY = c.clientY - startY;
+    }
+    updateUI();
+};
+
+// Event Listeners
+viewport.onmousedown = start;
+window.onmousemove = move;
+window.onmouseup = () => isDragging = false;
+
+viewport.addEventListener('touchstart', start, { passive: false });
+viewport.addEventListener('touchmove', move, { passive: false });
+viewport.addEventListener('touchend', () => { isDragging = false; lastDist = 0; });
+
+viewport.onwheel = (e) => { 
+    e.preventDefault(); 
+    scale *= (e.deltaY > 0 ? 0.9 : 1.1); 
+    updateUI(); 
+};
+;
         
         function updateUI() { img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`; }
 
@@ -354,7 +405,6 @@ document.getElementById('regForm').addEventListener('submit', (e) => {
         body: JSON.stringify(formData)
     }).then(() => {
         alert("Submitted Successfully!");
-        location.reload();
     });
 });
     </script>
