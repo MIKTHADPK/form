@@ -211,7 +211,34 @@
                     <div class="form-group"><div class="label-row"><span>Father's Name (EN)<span class="requir">*</span></span></div><input type="text" id="fath_en" placeholder="Father's Name" required></div>
                     <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>إسم الوالد</span></div><input type="text" id="fath_ar" placeholder="إسم الوالد بالعربي" dir="rtl" required></div>
 
-                    <div class="form-group full-width"><div class="label-row"><span>Place<span class="requir">*</span></span></div><input type="text" id="place" placeholder="City/Place" required></div>
+                    <div class="form-group"><div class="label-row"><span>Place (EN)<span class="requir">*</span></span></div><input type="text" id="place_en" placeholder="place" required></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>المكان</span></div><input type="text" id="place_ar" placeholder="المكاني" dir="rtl" required></div>
+
+                    <!-- <div class="form-group full-width"><div class="label-row"><span>Place<span class="requir">*</span></span></div><input type="text" id="place" placeholder="Place" required></div> -->
+
+                    <div class="form-group full-width">
+                        <div class="label-row"><span>District<span class="requir">*</span></span></div>
+                        <div class="full-width">
+                            <select id="district" required>
+                                <option value="">Select District</option>
+                                <option value="Alappuzha">Alappuzha</option>
+                                <option value="Ernakulam">Ernakulam</option>
+                                <option value="Idukki">Idukki</option>
+                                <option value="Kannur">Kannur</option>
+                                <option value="Kasaragod">Kasaragod</option>
+                                <option value="Kollam">Kollam</option>
+                                <option value="Kottayam">Kottayam</option>
+                                <option value="Kozhikode">Kozhikode</option>
+                                <option value="Malappuram">Malappuram</option>
+                                <option value="Palakkad">Palakkad</option>
+                                <option value="Pathanamthitta">Pathanamthitta</option>
+                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                <option value="Thrissur">Thrissur</option>
+                                <option value="Wayanad">Wayanad</option>
+                            </select>
+                        </div>
+                    </div>
+
 
                     <div class="form-group full-width">
                         <div class="label-row"><span>Mobile No.<span class="requir">*</span></span></div>
@@ -361,7 +388,8 @@ viewport.onwheel = (e) => {
             // Populate ID Card Visuals
             document.getElementById('id-n').innerText = document.getElementById('name_en').value;
             document.getElementById('id-n').innerText +=" "+ document.getElementById('deg_en').value;
-            document.getElementById('id-d').innerText = document.getElementById('place').value;
+            document.getElementById('id-d').innerText = document.getElementById('place_en').value;
+            document.getElementById('id-d').innerText += ", "+document.getElementById('district').value;
             document.getElementById('id-l').innerText = "S/o "+document.getElementById('fath_en').value;
             document.getElementById('id-m').innerText = "+"+document.getElementById('country').value + document.getElementById('mobile').value;;
             document.getElementById('id-p').src = document.getElementById('finalData').value;
@@ -395,7 +423,7 @@ viewport.onwheel = (e) => {
 
 
         // Form submission
- const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf3r-LFvq7ormbLlyNgDLAYZQtcn4qqaGX12VWaF1g8Xj2_4IQDRPjcg4iXeOngTnp/exec";
+ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvlhSquz83Iy51LXTGzpLq1WS-79aGv3NxY5A5_uVPRTw3em4fVKRw6medZxEVruh3/exec";
 
 document.getElementById('regForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -420,7 +448,9 @@ document.getElementById('regForm').addEventListener('submit', (e) => {
         deg_ar: document.getElementById('deg_ar').value,
         fath_en: document.getElementById('fath_en').value,
         fath_ar: document.getElementById('fath_ar').value,
-        place: document.getElementById('place').value,
+        place_en: document.getElementById('place_en').value,
+        place_ar: document.getElementById('place_ar').value,
+        district: document.getElementById('district').value,
         fullMobile: `${document.getElementById('country').value}${mobile}`,
         fileName: fileName,
         image: photoData
