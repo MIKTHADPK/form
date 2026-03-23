@@ -69,7 +69,7 @@
         input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
                 .phone-input { display: flex; gap: 5px; }
         .phone-input select { width: 90px; }
-        
+        .requir {color: red;}
         /* Photo Section */
         #photo-preview { width: 110px; height: 147px; border: 2px dashed var(--primary); border-radius: 8px; display: block; margin: 10px auto; object-fit: cover; cursor: pointer; background: #fafafa; }
 
@@ -199,22 +199,22 @@
             <form class="form-body" id="regForm">
                 <h2 style="text-align:center; color:var(--primary); text-transform:uppercase; margin-bottom:20px; text-decoration:underline;">Registration</h2>
                 <div class="form-grid">
-                    <div class="form-group"><div class="label-row"><span>Full Name (EN)</span></div><input type="text" id="name_en" placeholder="Full Name" required></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الإسم الكامل</span></div><input type="text" id="name_ar" placeholder="الإسم الكامل بالعربي" dir="rtl" required></div>
+                    <div class="form-group"><div class="label-row"><span>Full Name (EN)<span class="requir">*</span></span></div><input type="text" id="name_en" placeholder="Full Name" required></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>الإسم الكامل</span></div><input type="text" id="name_ar" placeholder="الإسم الكامل بالعربي" dir="rtl" required></div>
                     
-                    <div class="form-group"><div class="label-row"><span>Initials (EN)</span></div><input type="text" id="init_en" placeholder="Initials" required></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الأحرف الأولى</span></div><input type="text" id="init_ar" placeholder="الأحرف الأولى بالعربي" dir="rtl" required></div>
+                    <div class="form-group"><div class="label-row"><span>Initials (EN)</span></div><input type="text" id="init_en" placeholder="Initials"></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الأحرف الأولى</span></div><input type="text" id="init_ar" placeholder="الأحرف الأولى بالعربي" dir="rtl" ></div>
 
-                    <div class="form-group"><div class="label-row"><span>Religious Degree (EN)</span></div><input type="text" id="deg_en" placeholder="Qualification" required></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الدرجة الدينية</span></div><input type="text" id="deg_ar" placeholder="الدرجة الدينية بالعربي" dir="rtl" required></div>
+                    <div class="form-group"><div class="label-row"><span>Religious Degree (EN)</span></div><input type="text" id="deg_en" placeholder="Qualification" ></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الدرجة الدينية</span></div><input type="text" id="deg_ar" placeholder="الدرجة الدينية بالعربي" dir="rtl"></div>
 
-                    <div class="form-group"><div class="label-row"><span>Father's Name (EN)</span></div><input type="text" id="fath_en" placeholder="Father's Name" required></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar">إسم الوالد</span></div><input type="text" id="fath_ar" placeholder="إسم الوالد بالعربي" dir="rtl" required></div>
+                    <div class="form-group"><div class="label-row"><span>Father's Name (EN)<span class="requir">*</span></span></div><input type="text" id="fath_en" placeholder="Father's Name" required></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>إسم الوالد</span></div><input type="text" id="fath_ar" placeholder="إسم الوالد بالعربي" dir="rtl" required></div>
 
-                    <div class="form-group full-width"><div class="label-row"><span>Place</span></div><input type="text" id="place" placeholder="City/Place" required></div>
+                    <div class="form-group full-width"><div class="label-row"><span>Place<span class="requir">*</span></span></div><input type="text" id="place" placeholder="City/Place" required></div>
 
                     <div class="form-group full-width">
-                        <div class="label-row"><span>Mobile No.</span></div>
+                        <div class="label-row"><span>Mobile No.<span class="requir">*</span></span></div>
                         <div class="phone-input">
                             <select id="country"><option value="91">+91</option><option value="966">+966</option><option value="971">+971</option></select>
                             <input type="tel" id="mobile" placeholder="Mobile Number" required>
@@ -223,7 +223,7 @@
                 </div>
 
                 <div class="photo-section">
-                    <div class="label-row" style="justify-content:center; gap:20px;"><span>Photo</span><span class="ar">الصورة</span></div>
+                    <div class="label-row" style="justify-content:center; gap:20px;"><span>Photo<span class="requir">*</span></span><span class="ar">الصورة</span></div>
                     <img id="photo-preview" onclick="document.getElementById('fileInput').click()" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%23eee'/%3E%3C/svg%3E">
                     <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="initCrop(this)">
                     <input type="hidden" id="finalData" required>
