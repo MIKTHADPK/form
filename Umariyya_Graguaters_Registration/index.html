@@ -199,20 +199,20 @@
             <form class="form-body" id="regForm">
                 <h2 style="text-align:center; color:var(--primary); text-transform:uppercase; margin-bottom:20px; text-decoration:underline;">Registration</h2>
                 <div class="form-grid">
-                    <div class="form-group"><div class="label-row"><span>Full Name (EN)<span class="requir">*</span></span></div><input type="text" id="name_en" placeholder="Full Name" required></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>الإسم الكامل</span></div><input type="text" id="name_ar" placeholder="الإسم الكامل بالعربي" dir="rtl" required></div>
+                    <div class="form-group"><div class="label-row"><span>Full Name (EN -Wihtout Initials)<span class="requir">*</span></span></div><input type="text" id="name_en" placeholder="Eg: Muhammed Noufal" required></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>الإسم الكامل</span></div><input type="text" id="name_ar" placeholder="نحو : محمد نوفل" dir="rtl" required></div>
                     
-                    <div class="form-group"><div class="label-row"><span>Initials (EN)</span></div><input type="text" id="init_en" placeholder="Initials"></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الأحرف الأولى</span></div><input type="text" id="init_ar" placeholder="الأحرف الأولى بالعربي" dir="rtl" ></div>
+                    <div class="form-group"><div class="label-row"><span>Initials (EN)</span></div><input type="text" id="init_en" placeholder="K.B"></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الأحرف الأولى</span></div><input type="text" id="init_ar" placeholder="نحو : كى.بي" dir="rtl" ></div>
 
-                    <div class="form-group"><div class="label-row"><span>Religious Degree (EN)</span></div><input type="text" id="deg_en" placeholder="Qualification" ></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الدرجة الدينية</span></div><input type="text" id="deg_ar" placeholder="الدرجة الدينية بالعربي" dir="rtl"></div>
+                    <div class="form-group"><div class="label-row"><span>Religious Degree (EN)</span></div><input type="text" id="deg_en" placeholder="Eg: Saqafi" ></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar">الدرجة الدينية</span></div><input type="text" id="deg_ar" placeholder="نحو : الثقافي" dir="rtl"></div>
 
                     <div class="form-group"><div class="label-row"><span>Father's Name (EN)<span class="requir">*</span></span></div><input type="text" id="fath_en" placeholder="Father's Name" required></div>
                     <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>إسم الوالد</span></div><input type="text" id="fath_ar" placeholder="إسم الوالد بالعربي" dir="rtl" required></div>
 
-                    <div class="form-group"><div class="label-row"><span>Place (EN)<span class="requir">*</span></span></div><input type="text" id="place_en" placeholder="place" required></div>
-                    <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>المكان</span></div><input type="text" id="place_ar" placeholder="المكاني" dir="rtl" required></div>
+                    <div class="form-group"><div class="label-row"><span>Place (EN)<span class="requir">*</span></span></div><input type="text" id="place_en" placeholder="Eg: Pathiyasserry" required></div>
+                    <div class="form-group"><div class="label-row"><span></span><span class="ar"><span class="requir">*</span>المكان</span></div><input type="text" id="place_ar" placeholder="نحو : بتياشيري" dir="rtl" required></div>
 
                     <!-- <div class="form-group full-width"><div class="label-row"><span>Place<span class="requir">*</span></span></div><input type="text" id="place" placeholder="Place" required></div> -->
 
@@ -388,6 +388,7 @@ viewport.onwheel = (e) => {
             // Populate ID Card Visuals
             document.getElementById('id-n').innerText = document.getElementById('name_en').value;
             document.getElementById('id-n').innerText +=" "+ document.getElementById('deg_en').value;
+            document.getElementById('id-n').innerText +=" "+ document.getElementById('init_en').value;
             document.getElementById('id-d').innerText = document.getElementById('place_en').value;
             document.getElementById('id-d').innerText += ", "+document.getElementById('district').value;
             document.getElementById('id-l').innerText = "S/o "+document.getElementById('fath_en').value;
