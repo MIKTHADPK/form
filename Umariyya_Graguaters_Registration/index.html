@@ -260,6 +260,8 @@
                     </div>
                 </div>
 
+                <div class="form-group full-width"><div class="label-row"><span>email</span></div><input type="email" id="email" placeholder="eg: noufal@gmail.com"></div>
+
                 <div class="photo-section">
                     <div class="label-row" style="justify-content:center; gap:20px;"><span>Photo<span class="requir">*</span></span><span class="ar">الصورة</span></div>
                     <img id="photo-preview" onclick="document.getElementById('fileInput').click()" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%23eee'/%3E%3C/svg%3E">
@@ -403,7 +405,8 @@ viewport.onwheel = (e) => {
             document.getElementById('id-d').innerText = document.getElementById('place_en').value;
             document.getElementById('id-d').innerText += ", "+document.getElementById('district').value;
             document.getElementById('id-l').innerText = "S/o "+document.getElementById('fath_en').value;
-            document.getElementById('id-m').innerText = "+"+document.getElementById('country').value + document.getElementById('mobile').value;;
+            document.getElementById('id-m').innerText = "+"+document.getElementById('country').value + document.getElementById('mobile').value;
+            document.getElementById('id-m').innerText += "\n" + document.getElementById('email').value;
             document.getElementById('id-p').src = document.getElementById('finalData').value;
             
             document.getElementById('success-modal').style.display = 'flex';
@@ -435,7 +438,7 @@ viewport.onwheel = (e) => {
 
 
         // Form submission
- const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQJoDGCBupNjbD2A-CqVLo23Qcs0krAnaA6Y2wGo81VwaCG3qGt_7MKLELYF9N5DaY/exec";
+ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5Qu-wbY25LuWgfuIf77WT79piKzPjLORVDdgKb4Des2Clof0YAnaxd8UaEHXa4H6v/exec";
 
 document.getElementById('regForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -464,6 +467,7 @@ document.getElementById('regForm').addEventListener('submit', (e) => {
         place_ar: document.getElementById('place_ar').value,
         district: document.getElementById('district').value,
         fullMobile: `${document.getElementById('country').value}${mobile}`,
+        email:document.getElementById('email').value,
         fileName: fileName,
         image: photoData
     };
