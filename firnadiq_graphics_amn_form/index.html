@@ -55,6 +55,20 @@
         .choice-container label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         input[type="checkbox"], input[type="radio"] { accent-color: var(--brand-orange); width: 18px; height: 18px; }
 
+        input[type="checkbox"]:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+    
+    /* This adds a white SVG checkmark icon */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+    
+    /* Ensure the icon fits and centers */
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
         .btn-primary {
             background: var(--brand-orange); color: white; border: none; padding: 14px;
             border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px;
@@ -138,13 +152,15 @@
                 </ul>
             </fieldset>
 
+<fieldset>
+                <legend>Photo</legend>
              <div class="photo-section">
-                    <div class="label-row" style="justify-content:center; gap:20px;"><span>Photo<span class="requir">*</span></span><span class="ar">الصورة</span></div>
                     <img id="photo-preview" onclick="document.getElementById('fileInput').click()" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%23eee'/%3E%3C/svg%3E">
                     <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="initCrop(this)">
                     <input type="hidden" id="finalData" required>
                     <p style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-align: center;">TAP TO UPLOAD PHOTO</p>
                 </div>
+                </fieldset>
 
             <label style="font-size: 0.8rem; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px;">
                 <input type="checkbox" required> I confirm details are correct.
@@ -169,56 +185,91 @@
         <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <script>
-        let cropper;
+let cropper;
 
-        function showForm() {
-            document.getElementById('welcome-window').style.display = 'none';
-            document.getElementById('form-window').classList.add('show-form');
-        }
+/**
+ * 1. CONFIGURATION & CONSTANTS
+ * GUIDE_W/H: The dimensions of your white crop box.
+ */
+const GUIDE_W = 240;
+const GUIDE_H = 320;
 
-        function closeModal() {
-            document.getElementById('cropper-modal').style.display = 'none';
-            if (cropper) cropper.destroy();
-        }
+const modal = document.getElementById('crop-modal'), 
+      img = document.getElementById('source-img'), 
+      viewport = document.getElementById('viewport');
 
-const modal = document.getElementById('crop-modal'), img = document.getElementById('source-img'), viewport = document.getElementById('viewport');
-        let scale = 1, posX = 0, posY = 0, isDragging = false, startX, startY;
+let scale = 1, posX = 0, posY = 0, isDragging = false, startX, startY, lastDist = 0;
 
-        // Video Window
-                function openVideo() { document.getElementById('video-modal').style.display = 'flex'; }
-        function closeVideo() { 
-            document.getElementById('video-modal').style.display = 'none'; 
-            const f = document.getElementById('tutorial-iframe');
-            const s = f.src; f.src = ""; f.src = s;
-        }
+function showForm() {
+    document.getElementById('welcome-window').style.display = 'none';
+    document.getElementById('form-window').classList.add('show-form');
+}
 
-        // Offline Image Loading & Cropping
-        function initCrop(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => { 
-                    img.src = e.target.result; 
-                    modal.style.display = 'flex'; 
-                    scale = 1; posX = 0; posY = 0; 
-                    updateUI(); 
-                };
-                reader.readAsDataURL(input.files[0]);
-                input.value = ""; 
-            }
-        }
+/**
+ * 2. CORE LOGIC: MINIMUM SCALE
+ * Calculates the exact scale needed so the image is never 
+ * smaller than the crop guide.
+ */
+function getMinScale() {
+    if (!img.naturalWidth) return 1;
+    const scaleW = GUIDE_W / img.naturalWidth;
+    const scaleH = GUIDE_H / img.naturalHeight;
+    // Use Math.max so the image covers BOTH width and height
+    return Math.max(scaleW, scaleH);
+}
 
-        let lastDist = 0;
+/**
+ * 3. CORE LOGIC: BOUNDARY CLAMPING
+ * Prevents the image from being dragged inside the crop guide lines.
+ */
+function updateUI() {
+    const minScale = getMinScale();
+    if (scale < minScale) scale = minScale;
 
+    // Calculate the maximum allowed movement based on current scale
+    const scaledWidth = img.naturalWidth * scale;
+    const scaledHeight = img.naturalHeight * scale;
+
+    const limitX = (scaledWidth - GUIDE_W) / 2;
+    const limitY = (scaledHeight - GUIDE_H) / 2;
+
+    // Clamp posX and posY to stay within the 'extra' image area
+    if (posX > limitX) posX = limitX;
+    if (posX < -limitX) posX = -limitX;
+    if (posY > limitY) posY = limitY;
+    if (posY < -limitY) posY = -limitY;
+
+    img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+}
+
+// Image Loading
+function initCrop(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => { 
+            img.src = e.target.result; 
+            img.onload = () => {
+                modal.style.display = 'flex'; 
+                scale = getMinScale(); // Default to max zoom out
+                posX = 0; 
+                posY = 0; 
+                updateUI(); 
+            };
+        };
+        reader.readAsDataURL(input.files[0]);
+        input.value = ""; 
+    }
+}
+
+// Interaction Handlers (Touch & Mouse)
 const start = (e) => {
     isDragging = true;
     if (e.touches && e.touches.length === 2) {
-        // Initialize distance for pinch zoom
         lastDist = Math.hypot(
             e.touches[0].pageX - e.touches[1].pageX,
             e.touches[0].pageY - e.touches[1].pageY
         );
     } else {
-        // Standard drag (mouse or single finger)
         const c = e.touches ? e.touches[0] : e;
         startX = c.clientX - posX;
         startY = c.clientY - posY;
@@ -230,17 +281,16 @@ const move = (e) => {
     e.preventDefault();
 
     if (e.touches && e.touches.length === 2) {
-        // Pinch Zoom Logic
         const dist = Math.hypot(
             e.touches[0].pageX - e.touches[1].pageX,
             e.touches[0].pageY - e.touches[1].pageY
         );
         if (lastDist > 0) {
-            scale *= (dist / lastDist);
+            let nextScale = scale * (dist / lastDist);
+            scale = Math.max(nextScale, getMinScale());
         }
         lastDist = dist;
-    } else if (!e.touches || e.touches.length === 1) {
-        // Drag Logic
+    } else {
         const c = e.touches ? e.touches[0] : e;
         posX = c.clientX - startX;
         posY = c.clientY - startY;
@@ -252,31 +302,47 @@ const move = (e) => {
 viewport.onmousedown = start;
 window.onmousemove = move;
 window.onmouseup = () => isDragging = false;
-
 viewport.addEventListener('touchstart', start, { passive: false });
 viewport.addEventListener('touchmove', move, { passive: false });
 viewport.addEventListener('touchend', () => { isDragging = false; lastDist = 0; });
 
 viewport.onwheel = (e) => { 
     e.preventDefault(); 
-    scale *= (e.deltaY > 0 ? 0.9 : 1.1); 
+    let delta = e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.max(scale * delta, getMinScale());
     updateUI(); 
 };
-;
-        
-        function updateUI() { img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`; }
 
-        function processCrop() {
-            const canvas = document.createElement('canvas'); canvas.width = 600; canvas.height = 800;
-            const ctx = canvas.getContext('2d'), g = document.querySelector('.crop-guide').getBoundingClientRect(), i = img.getBoundingClientRect(), r = img.naturalWidth / i.width;
-            ctx.drawImage(img, (g.left - i.left)*r, (g.top - i.top)*r, g.width*r, g.height*r, 0, 0, 600, 800);
-            const result = canvas.toDataURL('image/jpeg', 0.9);
-            document.getElementById('photo-preview').src = result;
-            document.getElementById('finalData').value = result;
-            modal.style.display = 'none';
-        }
+// Actions
+function processCrop() {
+    const canvas = document.createElement('canvas'); 
+    canvas.width = 600; 
+    canvas.height = 800;
+    const ctx = canvas.getContext('2d'), 
+          g = document.querySelector('.crop-guide').getBoundingClientRect(), 
+          i = img.getBoundingClientRect(), 
+          r = img.naturalWidth / i.width;
+          
+    ctx.drawImage(img, (g.left - i.left)*r, (g.top - i.top)*r, g.width*r, g.height*r, 0, 0, 600, 800);
+    const result = canvas.toDataURL('image/jpeg', 0.9);
+    document.getElementById('photo-preview').src = result;
+    document.getElementById('finalData').value = result;
+    modal.style.display = 'none';
+}
 
-        function closeModal() { modal.style.display = 'none'; }
+function closeModal() { 
+    modal.style.display = 'none'; 
+    img.src = ""; // Clear memory
+}
+
+// Video Window Controls
+function openVideo() { document.getElementById('video-modal').style.display = 'flex'; }
+function closeVideo() { 
+    document.getElementById('video-modal').style.display = 'none'; 
+    const f = document.getElementById('tutorial-iframe');
+    const s = f.src; f.src = ""; f.src = s;
+}
+
 
     </script>
 </body>
