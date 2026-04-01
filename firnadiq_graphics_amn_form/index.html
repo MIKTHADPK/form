@@ -32,6 +32,9 @@
         #form-window { display: none; max-height: 85vh; overflow-y: auto; opacity: 0; transform: translateY(30px); }
         .show-form { display: block !important; animation: fadeInSlide 0.5s forwards ease-in-out; }
 
+        .logo-container { width: 85px; height: 85px; margin: 0 auto 10px; border-radius: 50%; padding: 5px; box-shadow: 0 0 15px rgba(37, 48, 148, 0.2); animation: breathe 3s infinite; display: flex; align-items: center; justify-content: center; background: var(--brand-orange); }
+        .logo { width: 100%; border-radius: 50%; }
+
         h1 { font-size: 1.6rem; text-align: center; margin-bottom: 5px; }
         h2 { text-decoration: underline; color: var(--brand-orange); text-align: center; margin-bottom: 25px; font-size: 1.1rem; text-underline-offset: 5px; }
 
@@ -57,14 +60,26 @@
             border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px;
         }
 
-        /* FIXED CROPPER MODAL */
-        #cropper-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 10000; align-items: center; justify-content: center; flex-direction: column;
-        }
-        .img-container { width: 95%; max-width: 500px; height: 70vh; background: #000; position: relative; }
-        #image-to-crop { max-width: 100%; display: block; }
-        #photo-preview { width: 100px; height: 133px; border: 2px solid var(--brand-orange); border-radius: 8px; margin: 15px auto; display: none; object-fit: cover; }
+        /* Photo Section */
+        #photo-preview { width: 110px; height: 147px; border: 2px dashed var(--primary); border-radius: 8px; display: block; margin: 10px auto; object-fit: cover; cursor: pointer; background: #fafafa; }
+
+        /* Cropper Modal Overlay */
+        #crop-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 9500; flex-direction: column; }
+        .crop-viewport { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        #source-img { position: absolute; max-width: none; cursor: move; touch-action: none; }
+        .crop-guide { position: absolute; width: 240px; height: 320px; border: 2px solid #fff; box-shadow: 0 0 0 4000px rgba(0,0,0,0.7); pointer-events: none; }
+        .crop-footer { background: #fff; padding: 15px; display: flex; gap: 10px; }
+
+        /* Photo Section */
+        #photo-preview { width: 110px; height: 147px; border: 2px dashed var(--primary); border-radius: 8px; display: block; margin: 10px auto; object-fit: cover; cursor: pointer; background: #fafafa; }
+
+        /* Cropper Modal Overlay */
+        #crop-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 9500; flex-direction: column; }
+        .crop-viewport { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        #source-img { position: absolute; max-width: none; cursor: move; touch-action: none; }
+        .crop-guide { position: absolute; width: 240px; height: 320px; border: 2px solid #fff; box-shadow: 0 0 0 4000px rgba(0,0,0,0.7); pointer-events: none; }
+        .crop-footer { background: #fff; padding: 15px; display: flex; gap: 10px; }
+
 
         @keyframes fadeInSlide { to { transform: translateY(0); opacity: 1; } }
         #form-window::-webkit-scrollbar { width: 5px; }
@@ -74,13 +89,18 @@
 <body>
 
     <div id="welcome-window" class="glass-card">
-        <h1 style="color: var(--brand-orange); font-size: 3.5rem; margin: 0;">FG</h1>
+        <div class="logo-container">
+                    <img src="./firnadq_logo.jpeg" alt="Logo" class="logo">
+        </div>
         <h1>Welcome to Firnadiq Graphics</h1>
         <p style="opacity: 0.8; margin-bottom: 2rem;">Design your future with us.</p>
         <button class="btn-primary" onclick="showForm()">Register Now</button>
     </div>
 
     <div id="form-window" class="glass-card">
+        <div class="logo-container">
+                    <img src="./firnadq_logo.jpeg" alt="Logo" class="logo">
+        </div>
         <h1>Firnadiq Graphics</h1>
         <h2>Admission Form</h2>
         <form>
@@ -118,37 +138,36 @@
                 </ul>
             </fieldset>
 
-            <fieldset>
-                <legend>Photo Upload</legend>
-                <p style="font-size: 0.7rem; opacity: 0.7;">Upload & Crop (3:4 Vertical)</p>
-                <input type="file" id="fileInput" accept="image/*">
-                <div style="text-align: center;">
-                    <img id="photo-preview" alt="Preview">
+             <div class="photo-section">
+                    <div class="label-row" style="justify-content:center; gap:20px;"><span>Photo<span class="requir">*</span></span><span class="ar">الصورة</span></div>
+                    <img id="photo-preview" onclick="document.getElementById('fileInput').click()" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%23eee'/%3E%3C/svg%3E">
+                    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="initCrop(this)">
+                    <input type="hidden" id="finalData" required>
+                    <p style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-align: center;">TAP TO UPLOAD PHOTO</p>
                 </div>
-                <input type="hidden" id="cropped_image_data">
-            </fieldset>
 
             <label style="font-size: 0.8rem; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px;">
                 <input type="checkbox" required> I confirm details are correct.
             </label>
 
+           
+
+
             <button type="submit" class="btn-primary">Submit Application</button>
         </form>
     </div>
-
-    <!-- CROPPER MODAL -->
-    <div id="cropper-modal">
-        <div class="img-container">
-            <img id="image-to-crop">
-        </div>
-        <p style="font-size: 0.8rem; color: #ccc; margin: 10px 0;">Pinch/Scroll to Zoom • Drag to Move</p>
-        <div style="display: flex; gap: 15px; width: 90%; max-width: 500px;">
-            <button class="btn-primary" id="crop-btn" style="flex: 2;">Crop & Save</button>
-            <button class="btn-primary" onclick="closeModal()" style="background: #444; flex: 1;">Cancel</button>
+ 
+    <div id="crop-modal">
+        <div class="crop-viewport" id="viewport"><img id="source-img" src=""><div class="crop-guide"></div></div>
+        <div class="crop-footer">
+            <button style="flex:1; padding:15px; background: var(--brand-orange); color:#fff; border:none;" onclick="closeModal()">Cancel</button>
+            <button style="flex:1; padding:15px; background:var(--brand-navy); color:#fff; border:none;" onclick="processCrop()">Crop & Save</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
     <script>
         let cropper;
 
@@ -162,45 +181,103 @@
             if (cropper) cropper.destroy();
         }
 
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = document.getElementById('image-to-crop');
-                    img.src = event.target.result;
-                    document.getElementById('cropper-modal').style.display = 'flex';
-                    
-                    if (cropper) cropper.destroy();
-                    
-                    // IMPROVED CROPPER SETTINGS
-                    cropper = new Cropper(img, {
-                        aspectRatio: 3 / 4,
-                        viewMode: 1,         // Restricted to image bounds
-                        dragMode: 'move',    // Drag the image, not the crop box
-                        autoCropArea: 0.8,
-                        zoomable: true,      // Enable Zoom
-                        scalable: true,
-                        background: false,
-                        responsive: true,
-                        checkOrientation: true
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+const modal = document.getElementById('crop-modal'), img = document.getElementById('source-img'), viewport = document.getElementById('viewport');
+        let scale = 1, posX = 0, posY = 0, isDragging = false, startX, startY;
 
-        document.getElementById('crop-btn').addEventListener('click', function() {
-            if (!cropper) return;
-            const canvas = cropper.getCroppedCanvas({ width: 600, height: 800 });
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-            
-            const preview = document.getElementById('photo-preview');
-            preview.src = dataUrl;
-            preview.style.display = 'block';
-            document.getElementById('cropped_image_data').value = dataUrl;
-            closeModal();
-        });
+        // Video Window
+                function openVideo() { document.getElementById('video-modal').style.display = 'flex'; }
+        function closeVideo() { 
+            document.getElementById('video-modal').style.display = 'none'; 
+            const f = document.getElementById('tutorial-iframe');
+            const s = f.src; f.src = ""; f.src = s;
+        }
+
+        // Offline Image Loading & Cropping
+        function initCrop(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => { 
+                    img.src = e.target.result; 
+                    modal.style.display = 'flex'; 
+                    scale = 1; posX = 0; posY = 0; 
+                    updateUI(); 
+                };
+                reader.readAsDataURL(input.files[0]);
+                input.value = ""; 
+            }
+        }
+
+        let lastDist = 0;
+
+const start = (e) => {
+    isDragging = true;
+    if (e.touches && e.touches.length === 2) {
+        // Initialize distance for pinch zoom
+        lastDist = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+        );
+    } else {
+        // Standard drag (mouse or single finger)
+        const c = e.touches ? e.touches[0] : e;
+        startX = c.clientX - posX;
+        startY = c.clientY - posY;
+    }
+};
+
+const move = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    if (e.touches && e.touches.length === 2) {
+        // Pinch Zoom Logic
+        const dist = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+        );
+        if (lastDist > 0) {
+            scale *= (dist / lastDist);
+        }
+        lastDist = dist;
+    } else if (!e.touches || e.touches.length === 1) {
+        // Drag Logic
+        const c = e.touches ? e.touches[0] : e;
+        posX = c.clientX - startX;
+        posY = c.clientY - startY;
+    }
+    updateUI();
+};
+
+// Event Listeners
+viewport.onmousedown = start;
+window.onmousemove = move;
+window.onmouseup = () => isDragging = false;
+
+viewport.addEventListener('touchstart', start, { passive: false });
+viewport.addEventListener('touchmove', move, { passive: false });
+viewport.addEventListener('touchend', () => { isDragging = false; lastDist = 0; });
+
+viewport.onwheel = (e) => { 
+    e.preventDefault(); 
+    scale *= (e.deltaY > 0 ? 0.9 : 1.1); 
+    updateUI(); 
+};
+;
+        
+        function updateUI() { img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`; }
+
+        function processCrop() {
+            const canvas = document.createElement('canvas'); canvas.width = 600; canvas.height = 800;
+            const ctx = canvas.getContext('2d'), g = document.querySelector('.crop-guide').getBoundingClientRect(), i = img.getBoundingClientRect(), r = img.naturalWidth / i.width;
+            ctx.drawImage(img, (g.left - i.left)*r, (g.top - i.top)*r, g.width*r, g.height*r, 0, 0, 600, 800);
+            const result = canvas.toDataURL('image/jpeg', 0.9);
+            document.getElementById('photo-preview').src = result;
+            document.getElementById('finalData').value = result;
+            modal.style.display = 'none';
+        }
+
+        function closeModal() { modal.style.display = 'none'; }
+
     </script>
 </body>
 </html>
