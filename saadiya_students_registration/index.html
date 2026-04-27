@@ -75,6 +75,15 @@
         /* Fieldset & Legend Styling */
         fieldset.form-grid { border: 2px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 25px; background: #fff;}
         legend { font-weight: bold; color: var(--primary); padding: 0 10px; font-size: 1.1rem; width: auto; margin-bottom: 10px;}
+        /* Container for the checkbox for whatsapp*/
+        .checkbox-row { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin: 15px 0; cursor: pointer;}
+        .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer;}
+        .checkbox-row label { font-size: 14px; color: #444; cursor: pointer; user-select: none;}
+
+        .radio-group-row { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 10px 0;}
+        .radio-item { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: #333;}
+        .radio-item input[type="radio"] { width: 18px; height: 18px; cursor: pointer; margin: 0;}
+
 
         /* Cropper Modal Overlay */
         #crop-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 9500; flex-direction: column; }
@@ -217,8 +226,8 @@
         </div>
         
         <div class="form-group">
-            <div class="label-row"><span></span><span class="ar"><span class="requir">*</span>الإسم الكامل</span></div>
-            <input type="text" id="name_ar" placeholder="الإسم الكامل" dir="rtl" required>
+            <div class="label-row"><span></span><span class="ar"><span class="requir">*</span>اسم الكامل</span></div>
+            <input type="text" id="name_ar" placeholder="اسم الكامل" dir="rtl" required>
         </div>
 
         <div class="form-group full-width">
@@ -227,17 +236,29 @@
         </div>
 
         <div class="form-group full-width">
-            <div class="label-row"><span>Mobile No.<span class="requir">*</span></span></div>
-            <div class="phone-input">
-                <select id="country-code">
-                    <option value="91">+91 (India)</option>
-                    <option value="973">+973 (Bahrain)</option>
-                    <option value="966">+966 (KSA)</option>
-                    <option value="971">+971 (UAE)</option>
-                </select>
-                <input type="tel" id="mobile" placeholder="Mobile Number" required>
-            </div>
-        </div>
+    <div class="label-row"><span>Mobile No.<span class="requir">*</span></span></div>
+    <div class="phone-input">
+        <select id="country-code">
+            <option value="91">+91 (Ind)</option>
+        </select>
+        <input type="tel" id="mobile" placeholder="Mobile Number" required>
+    </div>
+
+    <div class="checkbox-row">
+        <input type="checkbox" id="sync-student" 
+    onclick="syncNumbers('country-code', 'mobile', 'wa-country-code', 'whatsapp', 'sync-student')">
+
+        <label for="sync-student">WhatsApp is same as Mobile Number</label>
+    </div>
+
+    <div class="label-row"><span>WhatsApp No.<span class="requir">*</span></span></div>
+    <div class="phone-input">
+        <select id="wa-country-code">
+            <option value="91">+91 (Ind)</option>
+        </select>
+        <input type="tel" id="whatsapp" placeholder="WhatsApp Number" required>
+    </div>
+</div>
 
         <div class="form-group full-width">
             <div class="label-row"><span>Email</span></div>
@@ -252,26 +273,76 @@
 
         <div class="form-group">
             <div class="label-row"><span>Father's Name (EN)<span class="requir">*</span></span></div>
-            <!-- ID Clean: fath_en -->
             <input type="text" id="fath_en" placeholder="Father's Name" required>
         </div>
 
         <div class="form-group">
-            <div class="label-row"><span></span><span class="ar"><span class="requir">*</span>إسم الوالد</span></div>
-            <input type="text" id="fath_ar" placeholder="إسم الوالد بالعربي" dir="rtl" required>
+            <div class="label-row"><span></span><span class="ar"><span class="requir">*</span>اسم الوالد</span></div>
+            <input type="text" id="fath_ar" placeholder="اسم الوالد بالعربي" dir="rtl" required>
+        </div>
+
+        <div class="form-group">
+            <div class="label-row"><span>Gurdian Name (EN)<span class="requir">*</span></span></div>
+            <input type="text" id="guardian_en" placeholder="Guardian Name" required>
+        </div>
+
+        <div class="form-group">
+            <div class="label-row"><span></span><span class="ar"><span class="requir">*</span>اسم الولي</span></div>
+            <input type="text" id="guardian_ar" placeholder="اسم الولي بالعربي" dir="rtl" required>
         </div>
 
         <div class="form-group full-width">
-            <div class="label-row"><span>Father's Mobile No.<span class="requir">*</span></span></div>
-            <div class="phone-input">
-                <select id="country-code-father">
-                    <option value="91">+91 (India)</option>
-                    <option value="966">+966 (KSA)</option>
-                </select>
-                <!-- ID Fixed: mobile_father -->
-                <input type="tel" id="mobile_father" placeholder="Mobile Number" required>
-            </div>
-        </div>
+    <div class="label-row"><span>Relationship with Guardian<span class="requir">*</span></span></div>
+    
+    <div class="radio-group-row">
+        <label class="radio-item">
+            <input type="radio" name="relationship" value="Father" onclick="toggleOther(false)" required> 
+            <span>Father</span>
+        </label>
+        
+        <label class="radio-item">
+            <input type="radio" name="relationship" value="Mother" onclick="toggleOther(false)"> 
+            <span>Mother</span>
+        </label>
+        
+        <label class="radio-item">
+            <input type="radio" name="relationship" id="rel-other" value="Other" onclick="toggleOther(true)"> 
+            <span>Other</span>
+        </label>
+
+        <!-- Hidden input for 'Other' details -->
+        <input type="text" id="other_relation" placeholder="Please specify" style="display: none; width: 150px; margin-left: 10px;">
+    </div>
+</div>
+
+
+
+        <div class="form-group full-width">
+    <div class="label-row"><span>Guardian Mobile No.<span class="requir">*</span></span></div>
+    <div class="phone-input">
+        <select id="country-code-guardian">
+            <option value="91">+91 (Ind)</option>
+        </select>
+        <input type="tel" id="mobile_guardian" placeholder="Mobile Number" required>
+    </div>
+
+        <div class="checkbox-row">
+        <input type="checkbox" id="sync-guardian" 
+    onclick="syncNumbers('country-code-guardian', 'mobile_guardian', 'wa-country-code-guardian', 'whatsapp_guardian', 'sync-guardian')">
+
+        <label for="sync-guardian">WhatsApp is same as Mobile Number</label>
+    </div>
+
+    <div class="label-row"><span>Guardian WhatsApp No.<span class="requir">*</span></span></div>
+    <div class="phone-input">
+        <select id="wa-country-code-guardian">
+            <option value="91">+91 (Ind)</option>
+        </select>
+        <input type="tel" id="whatsapp_guardian" placeholder="WhatsApp Number" required>
+    </div>
+</div>
+
+
     </fieldset>
 
 
@@ -363,7 +434,7 @@
     <div class="form-group full-width">
             <div class="label-row"><span>Joined Course<span class="requir"> *</span></span></div>
             <select id="course" required>
-                <option value="">Select Country</option>
+                <option value="">Select Course</option>
                 <option value="THAQASSUS (SHAFI FIQH)">THAQASSUS (SHAFI FIQH)</option>
                 <option value="THAQASSUS (HANAFI FIQH)">THAQASSUS (HANAFI FIQH)</option>
                 <option value="THAQASSUS (ADAB)">THAQASSUS (ADAB)</option>
@@ -455,7 +526,54 @@
 
     /** 
      * ==============================
-     * 2. LOCATION LOGIC (Country/State)
+     * 2. Whatapp Checkbox Logic
+     * ==============================
+     */
+    function syncNumbers(srcCodeId, srcNumId, targetCodeId, targetNumId, checkboxId) {
+    const isChecked = document.getElementById(checkboxId).checked;
+    
+    // Elements
+    const srcCode = document.getElementById(srcCodeId);
+    const srcNum = document.getElementById(srcNumId);
+    const targetCode = document.getElementById(targetCodeId);
+    const targetNum = document.getElementById(targetNumId);
+
+    if (isChecked) {
+        // Sync values
+        targetCode.value = srcCode.value;
+        targetNum.value = srcNum.value;
+        // Lock the field
+        targetNum.readOnly = true;
+    } else {
+        // Unlock and Clear
+        targetNum.readOnly = false;
+        targetNum.value = "";
+    }
+}
+
+
+/** 
+     * ==============================
+     * 3. Other Relation Logic
+     * ==============================
+     */
+function toggleOther(isOther) {
+    const otherInput = document.getElementById('other_relation');
+    if (isOther) {
+        otherInput.style.display = "inline-block";
+        otherInput.required = true;
+        otherInput.focus();
+    } else {
+        otherInput.style.display = "none";
+        otherInput.required = false;
+        otherInput.value = ""; // Clear if user switches back to Father/Mother
+    }
+}
+
+
+    /** 
+     * ==============================
+     * 4. LOCATION LOGIC (Country/State)
      * ==============================
      */
     function updateStates() {
@@ -492,7 +610,7 @@
 
     /** 
      * ==============================
-     * 3. CROPPER LOGIC
+     * 5. CROPPER LOGIC
      * ==============================
      */
     function getMinScale() {
@@ -598,7 +716,7 @@
 
     /** 
      * ==============================
-     * 4. MAIN SUBMIT HANDLER
+     * 6. MAIN SUBMIT HANDLER
      * ==============================
      */
     document.getElementById('regForm').addEventListener('submit', (e) => {
@@ -625,6 +743,7 @@
         const dob = document.getElementById('dob').value;
         
         const mobileFull = "+" + document.getElementById('country-code').value + " " + document.getElementById('mobile').value;
+        const whatsappFull = "+" + document.getElementById('wa-country-code').value + " " + document.getElementById('whatsapp').value;
         const email = document.getElementById('email').value;
 
         // --- 2. Father's Details ---
@@ -716,6 +835,7 @@ switch (course) {
             name_ar: fullNameAr,
             dob: dob,
             mobile: mobileFull,
+            whatsapp: whatsappFull,
             email: email,
             
             fath_en: fatherNameEn,
@@ -761,7 +881,7 @@ switch (course) {
 
     /** 
      * ==============================
-     * 5. DOWNLOAD LOGIC
+     * 7. DOWNLOAD LOGIC
      * ==============================
      */
     function downloadID() {
