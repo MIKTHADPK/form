@@ -21,7 +21,7 @@
 
     <title>SA-ADIYA Sharee'ath College Data Collection 2026</title>
     <style>
-        :root { --primary: #253094; --bg: #f4f7fe; }
+        :root { --primary: #253094; --bg: #f4f7fe; --border-color: #504f4f; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg); overflow: hidden; }
 
         /* Intro Animation */
@@ -70,6 +70,7 @@
                 .phone-input { display: flex; gap: 5px; }
         .phone-input select { width: 90px; }
         .requir {color: red;}
+        
         /* Photo Section */
         #photo-preview { width: 110px; height: 147px; border: 2px dashed var(--primary); border-radius: 8px; display: block; margin: 10px auto; object-fit: cover; cursor: pointer; background: #fafafa; }
         /* Fieldset & Legend Styling */
@@ -94,23 +95,36 @@
 
         /* Success Popup & ID Card Template */
         #success-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
-        .success-card { background: white; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        .success-card { background: white; width: 100%;  padding: 20px; border-radius: 15px; max-height: 90vh; overflow-y: auto; }
+       
+         /* Print Container */
+        .form-container { width: 210mm; min-height: 297mm; padding: 15mm; margin: auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); box-sizing: border-box; position: relative;}
+        header { text-align: center; border-bottom: 2px solid var(--border-color); margin-bottom: 0px; padding-bottom: 0px; }
+        header h1 { margin: 0; text-transform: uppercase; font-size: 24px; color: var(--primary);}
+        header p { margin: 5px 0; font-size: 18px; color: #555; }
         
-        #id-card-render { 
-            width: 300px; height: 450px; background: #fff; margin: 10px auto; 
-            border-radius: 10px; border: 1px solid #ddd; position: relative; 
-            text-align: center; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        /* Photo Box */
+        .photo-box { position: absolute; top: 14mm; right: 15mm; width: 27mm; height: 36mm; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; background: #fafafa;border-radius: 2%;}
+        .photo-box img { max-width: 100%; max-height: 100%; object-fit: cover; }
+
+        /* Grid Layout */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .full-width { grid-column: span 2; }
+
+        .field-group { border-bottom: 1px dotted #ccc; padding-bottom: 5px; }
+        .label { font-weight: bold; font-size: 13px; color: #555; display: flex; justify-content: space-between; }
+        .label span.arabic { font-family: 'Amiri', serif; direction: rtl; color: #000; }
+        .value { margin-top: 5px; font-size: 16px; min-height: 20px; color: #000; }
+
+        section-title { grid-column: span 2; background: #eee; padding: 5px 10px; font-weight: bold; margin-top: 10px; text-transform: uppercase; font-size: 14px;
         }
-        .id-header { background: var(--primary); color: white; padding: 15px 5px; font-size: 0.9rem; display: flex;}
-        .id-head {align-items: center;}
 
-        /*Logo-card*/
-        .logo-card-container { width: 40px; height: 40px; margin: 0 auto 10px; border-radius: 50%; padding: 5px; box-shadow: 0 0 15px rgba(37, 48, 148, 0.2); background: #fff; margin-left: 30px; overflow: hidden;}
-        .logo-card { width: 100%; border-radius: 50%;     transform: scale(1.5);}
-
-        .id-photo { width: 102px; height: 136px; margin: 20px auto; border: 3px solid var(--primary); object-fit: cover; border-radius: 5%;}
-        .id-details { padding: 0px; font-size: 0.85rem; color: #333; line-height: 1.3; }
-         .id-footer { position: absolute; bottom: 0; width: 100%; background: #eee; padding: 7px 0; font-size: 23px; color: #555; font-weight: bolder;}
+        @media print {
+            body * { visibility: hidden; }
+             .form-container * { visibility: visible; }
+            .form-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
+            button { display: none !important;}
+        }
 
         /*Footer*/
          .footer{ margin-top: 15px; padding-top: 12px; border-top: 1px solid #eee; display: flex; align-items: center; gap: 12px; font-size: 12px; color: #555; justify-content: center; } 
@@ -164,31 +178,164 @@
         <div class="success-card">
             <h3 style="color:green; margin-top:0;">Registration Complete!</h3>
             
-            <div id="id-card-render">
-                <div class="id-header">
-                    <div class="logo-card-container">
-                    <img src="https://mikthadpk.github.io/form/saadiya_students_registration/asset/Saadiya_Logo.png" alt="Logo" class="logo-card">
-                </div>
-                <div class="id-head">
-                    <b style="font-size: 1.5rem;">SA-ADIYA</b><br><span style="letter-spacing: 3px;
-">SHAREE'ATH COLLEGE</span>
-                    <br/><i style="font-size: 10px">Sa-adabad, Deli, Kalanad(P.O), Kasaragode, Kerala -  671317</i>
-                </div>
-                <div style="width: 40px;"></div>
-                </div>
+            <div id="application-print-box" class="form-container">
+        <header>
+            <h1>JAMIA SA-ADIYA ARABIYA </h1>
+            <p>Data Collection <span id="acm-year"> </span></p>
+        </header>
 
-                <img id="id-p" class="id-photo">
-                <div class="id-details">
-                    <h3 id="id-n" style="margin:5px 0; color:var(--primary);"></h3>
-                    <p id="id-d" style="margin:2px 0; font-weight:bold;"></p>
-                    <p id="id-l" style="margin:2px 0; color:#666;"></p>
-                    <p id="id-m" style="margin:2px 0; color:#666;"></p>
-                </div>
-                <div class="id-footer">STUDENT</div>
+        <div class="photo-box">
+            <img id="photo-preview-form" src="" alt="Passport Size Photo">
+            <!-- If no image: Affix Photo Here -->
+        </div>
+
+        <div class="form-grid">
+            <section-title>Personal Details</section-title>
+            
+            <div class="field-group">
+                <div class="label">Hajar Number / UID</div>
+                <div class="value" id="val-hajar">1234-5678-9012</div>
             </div>
 
-            <button onclick="downloadID()" style="width:100%; padding:15px; background:#28a745; color:white; border:none; border-radius:8px; cursor:pointer; margin-top:10px; font-weight:bold;">DOWNLOAD ID CARD</button>
-            <button onclick="location.reload()" style="width:100%; padding:10px; background:#eee; border:none; border-radius:8px; margin-top:10px; cursor:pointer;">New Registration</button>
+            <div class="field-group">
+                <div class="label">Course Applying For</div>
+                <div class="value" id="val-course">Bachelor of Islamic Studies</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Name (In Block Letters)</div>
+                <div class="value" id="val-name">MOHAMMED RASHID</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label"><span class="arabic">الاسم الكامل</span> </div>
+                <div class="value" id="val-name-ar">محمد راشد</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Date of Birth</div>
+                <div class="value" id="val-dob">15/05/2002</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Email Address</div>
+                <div class="value" id="val-email">rashid@example.com</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Mobile Number</div>
+                <div class="value" id="val-mobile">+91 9876543210</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">WhatsApp</div>
+                <div class="value" id="val-whatsapp">+91 9876543210</div>
+            </div>
+
+            <section-title>Family & Guardian Information</section-title>
+
+            <div class="field-group">
+                <div class="label">Father's Name</div>
+                <div class="value" id="val-father">Abdullah K.P</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label"><span class="arabic">اسم الوالد</span> </div>
+                <div class="value" id="val-father-ar">عبد الله</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Guardian Name</div>
+                <div class="value" id="val-guardian">Abdullah K.P</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label"><span class="arabic">اسم الولي</span> </div>
+                <div class="value" id="val-guardian-ar">عبد الله</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Relation with Guardian</div>
+                <div class="value" id="val-relation">Father</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Guardian Mobile</div>
+                <div class="value" id="val-g-mobile">+91 9000000000</div>
+            </div>
+
+            <section-title>Academic Background</section-title>
+
+            <div class="field-group">
+                <div class="label">Previous College</div>
+                <div class="value" id="val-prev-coll">Government Arts College</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">College Place</div>
+                <div class="value" id="val-coll-place">Calicut, Kerala</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Usthad Name</div>
+                <div class="value" id="val-usthad">Zaid Musliyar</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Usthad Mobile</div>
+                <div class="value" id="val-u-mobile">+91 9111111111</div>
+            </div>
+
+            <section-title>Contact Address</section-title>
+
+            <div class="field-group">
+                <div class="label">House Name/No.</div>
+                <div class="value" id="val-house">Baitul Noor</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Place</div>
+                <div class="value" id="val-place">Oorakam</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Post Office</div>
+                <div class="value" id="val-post">Vengara</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Panchayath</div>
+                <div class="value" id="val-panchayath">Oorakam</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">District</div>
+                <div class="value" id="val-district">Malappuram</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">State / Country</div>
+                <div class="value" id="val-state-country">Kerala, India</div>
+            </div>
+
+            <div class="field-group">
+                <div class="label">Pincode</div>
+                <div class="value" id="val-pincode">676519</div>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+            <div style="text-align: center; border-top: 1px solid #000; width: 200px; padding-top: 5px;">Applicant Signature</div>
+            <div style="text-align: center; border-top: 1px solid #000; width: 200px; padding-top: 5px;">Parent Signature</div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer;">Print Application</button>
+        <button onclick="downloadAsPDF() " style="padding: 10px 20px; cursor: pointer;">Download as PDF</button>
+    </div>
+
         </div>
     </div>
 
@@ -540,6 +687,7 @@
     <!-- External Library: html2canvas with Fallback -->
    <!-- 1. EXTERNAL LIBRARIES ONLY (No data.js) -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
     /** 
@@ -575,6 +723,9 @@
     // Start Page Animation
     window.onload = () => setTimeout(() => document.body.classList.add('loaded'), 800);
 
+    // Academic Year Auto-Fill
+    const acmYearSpan = document.getElementById('acm-year');
+    acmYearSpan.textContent = `${new Date().getFullYear()}-${(new Date().getFullYear() + 1).toString().slice(-2)}`;
 
     /** 
      * ==============================
@@ -718,7 +869,7 @@ function toggleOther(isOther) {
         const i = img.getBoundingClientRect();
         const r = img.naturalWidth / i.width; 
         
-        ctx.drawImage(img, (g.left - i.left)*r, (g.top - i.top)*r, g.width*r, g.height*r, 0, 0, 600, 800);
+        ctx.drawImage(img, (g.left - i.left)*r, (g.top - i.top)*r, g.width*r, g.height*r, 0, 0, 900, 1200);
         
         const result = canvas.toDataURL('image/jpeg', 0.9);
         document.getElementById('photo-preview').src = result;
@@ -841,11 +992,41 @@ function toggleOther(isOther) {
         
         // 3. Update ID Card Preview
         try {
-            if(document.getElementById('id-n')) document.getElementById('id-n').innerText = fullNameEn;
-            if(document.getElementById('id-d')) document.getElementById('id-d').innerText = place + ", " + district;
-            if(document.getElementById('id-l')) document.getElementById('id-l').innerText = "S/o " + fatherNameEn;
-            if(document.getElementById('id-m')) document.getElementById('id-m').innerText = mobileFull;
-            if(document.getElementById('id-p')) document.getElementById('id-p').src = photoData;
+            // Photo
+    if(document.getElementById('photo-preview-form')) document.getElementById('photo-preview-form').src = photoData;
+
+    // Personal Details
+    if(document.getElementById('val-hajar')) document.getElementById('val-hajar').innerText = hajarNumber;
+    if(document.getElementById('val-course')) document.getElementById('val-course').innerText = course;
+    if(document.getElementById('val-name')) document.getElementById('val-name').innerText = fullNameEn;
+    if(document.getElementById('val-name-ar')) document.getElementById('val-name-ar').innerText = fullNameAr;
+    if(document.getElementById('val-dob')) document.getElementById('val-dob').innerText = dob;
+    if(document.getElementById('val-mobile')) document.getElementById('val-mobile').innerText = mobileFull;
+    if(document.getElementById('val-whatsapp')) document.getElementById('val-whatsapp').innerText = whatsappFull;
+    if(document.getElementById('val-email')) document.getElementById('val-email').innerText = email;
+
+    // Family & Guardian
+    if(document.getElementById('val-father')) document.getElementById('val-father').innerText = fatherNameEn;
+    if(document.getElementById('val-father-ar')) document.getElementById('val-father-ar').innerText = fatherNameAr;
+    if(document.getElementById('val-guardian')) document.getElementById('val-guardian').innerText = guardianNameEn;
+    if(document.getElementById('val-guardian-ar')) document.getElementById('val-guardian-ar').innerText = guardianNameAr;
+    if(document.getElementById('val-relation')) document.getElementById('val-relation').innerText = relation;
+    if(document.getElementById('val-g-mobile')) document.getElementById('val-g-mobile').innerText = guardianMobileFull;
+
+    // Academic Background
+    if(document.getElementById('val-prev-coll')) document.getElementById('val-prev-coll').innerText = prevCollege;
+    if(document.getElementById('val-coll-place')) document.getElementById('val-coll-place').innerText = prevCollegePlace;
+    if(document.getElementById('val-usthad')) document.getElementById('val-usthad').innerText = usthadName;
+    if(document.getElementById('val-u-mobile')) document.getElementById('val-u-mobile').innerText = usthadMobileFull;
+
+    // Contact Address
+    if(document.getElementById('val-house')) document.getElementById('val-house').innerText = houseName;
+    if(document.getElementById('val-place')) document.getElementById('val-place').innerText = place;
+    if(document.getElementById('val-post')) document.getElementById('val-post').innerText = post;
+    if(document.getElementById('val-panchayath')) document.getElementById('val-panchayath').innerText = panchayath;
+    if(document.getElementById('val-district')) document.getElementById('val-district').innerText = district;
+    if(document.getElementById('val-state-country')) document.getElementById('val-state-country').innerText = state + ", " + country;
+    if(document.getElementById('val-pincode')) document.getElementById('val-pincode').innerText = pincode;
         } catch(err) { console.log("Preview update skipped"); }
 
 
@@ -949,29 +1130,26 @@ switch (course) {
      * 7. DOWNLOAD LOGIC
      * ==============================
      */
-    function downloadID() {
-        if (typeof html2canvas === 'undefined') {
-            alert("Download tool loading... please wait.");
-            return;
-        }
-        
-        const card = document.getElementById('id-card-render');
-        if (!card) return;
+    function downloadAsPDF() {
+    const element = document.querySelector('#application-print-box');
 
-        html2canvas(card, { 
-            scale: 2, 
-            useCORS: true, 
-            backgroundColor: "#ffffff",
+    // 1. PDF Settings for A4
+    const options = {
+        margin: [0, 0, 0, 0], // top, left, bottom, right in mm
+        filename: 'Student_Application.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2, // High resolution
+            useCORS: true,
             logging: false
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'ID_Card.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }).catch(err => {
-            alert("Failed to generate ID card.");
-        });
-    }
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // 2. Generate and Save
+    html2pdf().set(options).from(element).save();
+}
+
 </script>
 
 </body>
