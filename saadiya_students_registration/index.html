@@ -321,7 +321,25 @@
     <div class="label-row"><span>Guardian Mobile No.<span class="requir">*</span></span></div>
     <div class="phone-input">
         <select id="country-code-guardian">
-            <option value="91">+91 (Ind)</option>
+            <option value="91">+91</option>
+            <option value="973">+973</option>
+            <option value="357">+357</option>
+            <option value="20">+20</option>
+            <option value="98">+98</option>
+            <option value="964">+964</option>
+            <option value="972">+972</option>
+            <option value="962">+962</option>
+            <option value="965">+965</option>
+            <option value="961">+96</option>
+            <option value="968">+968</option>
+            <option value="970">+970</option>
+            <option value="974">+974</option>
+            <option value="966">+966</option>
+            <option value="963">+963</option>
+            <option value="90">+90</option>
+            <option value="971">+971</option>
+            <option value="967">+967</option>
+
         </select>
         <input type="tel" id="mobile_guardian" placeholder="Mobile Number" required>
     </div>
@@ -336,7 +354,24 @@
     <div class="label-row"><span>Guardian WhatsApp No.<span class="requir">*</span></span></div>
     <div class="phone-input">
         <select id="wa-country-code-guardian">
-            <option value="91">+91 (Ind)</option>
+            <option value="91">+91</option>
+            <option value="973">+973</option>
+            <option value="357">+357</option>
+            <option value="20">+20</option>
+            <option value="98">+98</option>
+            <option value="964">+964</option>
+            <option value="972">+972</option>
+            <option value="962">+962</option>
+            <option value="965">+965</option>
+            <option value="961">+96</option>
+            <option value="968">+968</option>
+            <option value="970">+970</option>
+            <option value="974">+974</option>
+            <option value="966">+966</option>
+            <option value="963">+963</option>
+            <option value="90">+90</option>
+            <option value="971">+971</option>
+            <option value="967">+967</option>
         </select>
         <input type="tel" id="whatsapp_guardian" placeholder="WhatsApp Number" required>
     </div>
@@ -369,7 +404,24 @@
             <div class="label-row"><span>Previous Usthad's Mobile No.<span class="requir"> *</span></span></div>
             <div class="phone-input">
                 <select id="country-code-usthad">
-                    <option value="91">+91 (India)</option>
+                    <option value="91">+91</option>
+            <option value="973">+973</option>
+            <option value="357">+357</option>
+            <option value="20">+20</option>
+            <option value="98">+98</option>
+            <option value="964">+964</option>
+            <option value="972">+972</option>
+            <option value="962">+962</option>
+            <option value="965">+965</option>
+            <option value="961">+96</option>
+            <option value="968">+968</option>
+            <option value="970">+970</option>
+            <option value="974">+974</option>
+            <option value="966">+966</option>
+            <option value="963">+963</option>
+            <option value="90">+90</option>
+            <option value="971">+971</option>
+            <option value="967">+967</option>
                 </select>
                 <input type="tel" id="mobile_usthad" placeholder="Mobile Number" required>
             </div>
@@ -628,6 +680,7 @@ function toggleOther(isOther) {
         const scaledHeight = img.naturalHeight * scale;
         const limitX = (scaledWidth - GUIDE_W) / 2;
         const limitY = (scaledHeight - GUIDE_H) / 2;
+        
 
         if (posX > limitX) posX = limitX;
         if (posX < -limitX) posX = -limitX;
@@ -635,17 +688,20 @@ function toggleOther(isOther) {
         if (posY < -limitY) posY = -limitY;
 
         img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
-    }
-
-    function initCrop(input) {
+    }    function initCrop(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => { 
                 img.src = e.target.result; 
                 img.onload = () => {
                     modal.style.display = 'flex'; 
-                    scale = getMinScale(); 
-                    posX = 0; posY = 0; 
+                    
+                    // Set default scale to 50% larger than minimum
+                    // but still allows zooming down to getMinScale()
+                    scale = getMinScale() * 1.5; 
+                    
+                    posX = 0; 
+                    posY = 0; 
                     updateUI(); 
                 };
             };
@@ -742,20 +798,25 @@ function toggleOther(isOther) {
         const fullNameAr = document.getElementById('name_ar').value;
         const dob = document.getElementById('dob').value;
         
-        const mobileFull = "+" + document.getElementById('country-code').value + " " + document.getElementById('mobile').value;
-        const whatsappFull = "+" + document.getElementById('wa-country-code').value + " " + document.getElementById('whatsapp').value;
+        const mobileFull = document.getElementById('country-code').value + "" + document.getElementById('mobile').value;
+        const whatsappFull = document.getElementById('wa-country-code').value + "" + document.getElementById('whatsapp').value;
         const email = document.getElementById('email').value;
 
         // --- 2. Father's Details ---
         const fatherNameEn = document.getElementById('fath_en').value.toUpperCase();
         const fatherNameAr = document.getElementById('fath_ar').value;
-        const fatherMobileFull = "+" + document.getElementById('country-code-father').value + " " + document.getElementById('mobile_father').value;
+        const guardianNameEn = document.getElementById('guardian_en').value.toUpperCase();
+        const guardianNameAr = document.getElementById('guardian_ar').value;
+        let relation = document.querySelector('input[name="relationship"]:checked')?.value;
+        if (relation === "Other") { relation = document.getElementById('other_relation').value;}
+        const guardianMobileFull = document.getElementById('country-code-guardian').value + "" + document.getElementById('mobile_guardian').value;
+        const guardianWhatsappFull = document.getElementById('wa-country-code-guardian').value + "" + document.getElementById('whatsapp_guardian').value;
 
         // --- 3. Previous Education ---
         const prevCollege = document.getElementById('prev_college_name').value.toUpperCase();
         const prevCollegePlace = document.getElementById('prev_college_place').value.toUpperCase();
         const usthadName = document.getElementById('usthad_name').value.toUpperCase();
-        const usthadMobileFull = "+" + document.getElementById('country-code-usthad').value + " " + document.getElementById('mobile_usthad').value;
+        const usthadMobileFull = document.getElementById('country-code-usthad').value + "" + document.getElementById('mobile_usthad').value;
 
         // --- 4. Address & Location ---
         const houseName = document.getElementById('house-name').value.toUpperCase();
@@ -840,7 +901,11 @@ switch (course) {
             
             fath_en: fatherNameEn,
             fath_ar: fatherNameAr,
-            father_mobile: fatherMobileFull,
+            guardian_en: guardianNameEn,
+            guardian_ar: guardianNameAr,
+            relation_with_guardian: relation,
+            guardian_mobile: guardianMobileFull,
+            guardian_whatsapp: guardianWhatsappFull,
 
             prev_college: prevCollege,
             prev_college_place: prevCollegePlace,
