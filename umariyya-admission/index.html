@@ -127,7 +127,7 @@
         }
 
         /* Success Popup & ID Card Template */
-        #success-modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px;}
+        #success-modal { display: block; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px;}
         .success-card { background: white; width: 100%; padding: 20px; border-radius: 15px; max-height: 90vh; overflow-y: auto;
         }
 
@@ -154,8 +154,9 @@
         /* Signatures and Office Use */
         .declaration {margin-top: 10px;font-size: 11.5px;text-align: justify;line-height: 1.5;}
         .signature-section {margin-top: 25px;display: flex;justify-content: flex-end;font-size: 13px;line-height: 2.2;}
-        .office-use {margin-top: 20px;border: 1px solid #000;padding: 12px;font-size: 12px;line-height: 2;page-break-inside: avoid;}        
-        .office-use-title {text-align: center; font-weight: 600; font-size: 14px;margin-bottom: 5px; text-decoration: underline;}
+        .office-use {margin-top: 20px;border: 1px solid #000;padding: 0px;font-size: 12px;page-break-inside: avoid;}        
+        .office-use img {width: 100%; height: auto; object-fit: contain; margin-bottom: 0;}
+        /* .office-use-title {text-align: center; font-weight: 600; font-size: 14px;margin-bottom: 5px; text-decoration: underline;} */
         
 
         /* Grid Layout */
@@ -274,7 +275,7 @@
             <th colspan="2">Address Details</th>
         </tr>
         <tr>
-            <td class="p-label" style="width: 22%;">Full Address:<br><span style="font-size:10px; font-weight:normal;">(House, Via, Place, Post, Dist, State, Country - Pin)</span></td>
+            <td class="p-label" style="width: 22%;">Full Address:</td>
             <td id="p_address_full"></td>
         </tr>
         <tr>
@@ -433,12 +434,7 @@
 
     <!-- OFFICE USE ONLY -->
     <div class="office-use">
-        <div class="office-use-title">Office Use Only</div>
-        <div>Application Received By : ...................................................................................................................................................................................................... </div>
-        <div>Date of Application Receipt : ................./............./................................. &nbsp; ; &nbsp; Documents Verified (Yes/No) : ...................................................... </div>
-        <div>Transfer certificate proceed (Yes/No) : ................................... &nbsp; ; &nbsp; Admission Approved (Yes/No) : ................................................................ </div>
-        <div>Admission fee receipt number : ..............................................................................&nbsp; ; &nbsp; Admission Number : ........................................................... </div>
-        <div>Remarks : ...................................................................................................................................................................................................................................... </div>
+        <img src="./asset/office_use.png" alt="" srcset="">
     </div>
             </div>
 
@@ -1336,7 +1332,7 @@ if (document.getElementById('p_app_pob')) document.getElementById('p_app_pob').i
 if (document.getElementById('p_aadhaar')) document.getElementById('p_aadhaar').innerText = aadhaarNum;
 
                 // Family & Guardian
-                let fullAddress = [addrHouse, addrVia, addrPlace, addrPost, district, state, country].filter(Boolean).join(", ") + " - " + addrPincode;
+                let fullAddress = [addrHouse, addrVia, addrPlace, addrPost ? `${addrPost} (P.O)` : null, district, state, country].filter(Boolean).join(", ") + " - " + addrPincode;
 
 if (document.getElementById('p_address_full')) document.getElementById('p_address_full').innerText = fullAddress;
 if (document.getElementById('p_address_local')) document.getElementById('p_address_local').innerText = addrPanchayath + " & " + addrTaluk;
