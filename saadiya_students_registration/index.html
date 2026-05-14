@@ -18,11 +18,21 @@
     <meta property="og:image:height" content="228">
     <link rel="icon" href="https://mikthadpk.github.io/form/asset/icons/Saadiya-Icon.ico">
 
+    <!-- Google Fonts: Roboto (English) and Cairo (Arabic) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
 
     <title>SA-ADIYA Sharee'ath College Data Collection 2026</title>
     <style>
         :root { --primary: #253094; --bg: #f4f7fe; --border-color: #504f4f; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg); overflow: hidden; }
+        
+        /* Base Full-Screen Reset & English Font */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%;  background: var(--bg); overflow: hidden; font-family: 'Roboto', Arial, sans-serif; font-size: 13px; color: #000;}
+        
+        /* Arabic Font Override */
+        /* [dir="rtl"] { font-family: 'Cairo', Arial, sans-serif; font-size: 15px; Slightly larger for readability font-weight: 600; } */
 
         /* Intro Animation */
         .overlay { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 9000; pointer-events: none; }
@@ -65,7 +75,7 @@
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         @media (min-width: 500px) { .form-grid { grid-template-columns: 1fr 1fr; } .full-width { grid-column: span 2; } }
         .label-row { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; }
-        .ar { color: var(--primary); font-family: Arial; }
+        .ar { color: var(--primary); font-family: Arial; font-size: 15px; }
         input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
                 .phone-input { display: flex; gap: 5px; }
         .phone-input select { width: 90px; }
@@ -97,15 +107,42 @@
         #success-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
         .success-card { background: white; width: 100%;  padding: 20px; border-radius: 15px; max-height: 90vh; overflow-y: auto; }
        
-         /* Print Container */
-        .form-container { width: 210mm; min-height: 297mm; padding: 15mm; margin: auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); box-sizing: border-box; position: relative;}
-        header { text-align: center; border-bottom: 2px solid var(--border-color); margin-bottom: 0px; padding-bottom: 0px; }
-        header h1 { margin: 0; text-transform: uppercase; font-size: 24px; color: var(--primary);}
-        header p { margin: 5px 0; font-size: 18px; color: #555; }
-        
-        /* Photo Box */
-        .photo-box { position: absolute; top: 14mm; right: 15mm; width: 27mm; height: 36mm; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; background: #fafafa;border-radius: 2%;}
-        .photo-box img { max-width: 100%; max-height: 100%; object-fit: cover; }
+        .print-container { width: 210mm;  min-height: 297mm;  margin: 20px auto; padding: 10mm; background: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); box-sizing: border-box;}
+
+        /* Header Layout: Logo (Left) - Title (Center) - Photo (Right) */
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px;}
+
+        .logo-box { width: 100px; height: 100px; background-color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #e8e4e4; border: 1.5px dashed #ccc; border-radius: 10%;}
+        .logo-box img { max-width: 100%; max-height: 100%;}
+        .title-box { text-align: center; flex-grow: 1;}
+        .title-box h1 { margin: 0; font-size: 22px; text-transform: uppercase;}
+        .title-box h2 { margin: 5px 0 0 0; font-size: 16px; font-weight: normal;}
+        .photo-box { width: 90px; aspect-ratio: 3 / 4; border: 1px solid #000; background-color: #f9f9f9; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px;}
+        .photo-box img { width: 100%; height: 100%; object-fit: cover;}
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px;}
+        th, td { border: 1px solid #333; padding: 8px; text-align: left; vertical-align: middle;}
+        th { background-color: #f2f2f2; width: 20%; font-size: 12px; color: #333;}
+        td { width: 30%; font-weight: bold;}
+        /* Section Headers inside Table */
+        .section-header { background-color: #e0e0e0; text-align: center; font-weight: bold; font-size: 14px; text-transform: uppercase;}
+
+        /* Print Media Queries */
+        @media print {
+            body * { visibility: hidden; }
+            .print-container * { visibility: visible; }
+            .print-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
+            
+            th, .section-header {-webkit-print-color-adjust: exact; print-color-adjust: exact;} 
+            button { display: none !important;} }
+            
+            .action-buttons { text-align: center; margin: 20px auto; width: 210mm;}
+            .btn { padding: 10px 20px; margin: 0 10px; font-size: 14px; font-family: 'Roboto', Arial, sans-serif; font-weight: 600; cursor: pointer; border: none; border-radius: 4px; color: white;}
+            .print-btn { background-color: #28a745; }
+            .print-btn:hover { background-color: #218838; }
+            
+            .pdf-btn { background-color: #007bff; }
+            .pdf-btn:hover { background-color: #0069d9; }
 
         /* Grid Layout */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
@@ -117,13 +154,6 @@
         .value { margin-top: 5px; font-size: 16px; min-height: 20px; color: #000; }
 
         section-title { grid-column: span 2; background: #eee; padding: 5px 10px; font-weight: bold; margin-top: 10px; text-transform: uppercase; font-size: 14px;
-        }
-
-        @media print {
-            body * { visibility: hidden; }
-             .form-container * { visibility: visible; }
-            .form-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
-            button { display: none !important;}
         }
 
         /*Footer*/
@@ -178,162 +208,181 @@
         <div class="success-card">
             <h3 style="color:green; margin-top:0;">Registration Complete!</h3>
             
-            <div id="application-print-box" class="form-container">
-        <header>
-            <h1>JAMIA SA-ADIYA ARABIYA </h1>
-            <p>Data Collection <span id="acm-year"> </span></p>
-        </header>
-
-        <div class="photo-box">
-            <img id="photo-preview-form" src="" alt="Passport Size Photo">
-            <!-- If no image: Affix Photo Here -->
-        </div>
-
-        <div class="form-grid">
-            <section-title>Personal Details</section-title>
+    <div class="print-container" id="application-print-box">
+        
+        <!-- HEADER SECTION -->
+        <div class="header-section">
+            <div class="logo-box">
+                <img src="./asset/Saadiya_Logo.png" alt="Institution Logo" id="inst-logo">
+            </div>
             
-            <div class="field-group">
-                <div class="label">Hajar Number / UID</div>
-                <div class="value" id="val-hajar">1234-5678-9012</div>
+            <div class="title-box">
+                <h1>JAMIA SA-ADIYA ARABIYA</h1>
+                <h2>Student Data Collection Application<span id="acm-year"></span></h2>
             </div>
 
-            <div class="field-group">
-                <div class="label">Course Applying For</div>
-                <div class="value" id="val-course">Bachelor of Islamic Studies</div>
+            <div class="photo-box">
+                <!-- 3:4 Ratio Photo -->
+                <img id="photo-preview-form" src="" alt="Student Photo">
             </div>
-
-            <div class="field-group">
-                <div class="label">Name (In Block Letters)</div>
-                <div class="value" id="val-name">MOHAMMED RASHID</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label"><span class="arabic">الاسم الكامل</span> </div>
-                <div class="value" id="val-name-ar">محمد راشد</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Date of Birth</div>
-                <div class="value" id="val-dob">15/05/2002</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Email Address</div>
-                <div class="value" id="val-email">rashid@example.com</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Mobile Number</div>
-                <div class="value" id="val-mobile">+91 9876543210</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">WhatsApp</div>
-                <div class="value" id="val-whatsapp">+91 9876543210</div>
-            </div>
-
-            <section-title>Family & Guardian Information</section-title>
-
-            <div class="field-group">
-                <div class="label">Father's Name</div>
-                <div class="value" id="val-father">Abdullah K.P</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label"><span class="arabic">اسم الوالد</span> </div>
-                <div class="value" id="val-father-ar">عبد الله</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Guardian Name</div>
-                <div class="value" id="val-guardian">Abdullah K.P</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label"><span class="arabic">اسم الولي</span> </div>
-                <div class="value" id="val-guardian-ar">عبد الله</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Relation with Guardian</div>
-                <div class="value" id="val-relation">Father</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Guardian Mobile</div>
-                <div class="value" id="val-g-mobile">+91 9000000000</div>
-            </div>
-
-            <section-title>Academic Background</section-title>
-
-            <div class="field-group">
-                <div class="label">Previous College</div>
-                <div class="value" id="val-prev-coll">Government Arts College</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">College Place</div>
-                <div class="value" id="val-coll-place">Calicut, Kerala</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Usthad Name</div>
-                <div class="value" id="val-usthad">Zaid Musliyar</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Usthad Mobile</div>
-                <div class="value" id="val-u-mobile">+91 9111111111</div>
-            </div>
-
-            <section-title>Contact Address</section-title>
-
-            <div class="field-group">
-                <div class="label">House Name/No.</div>
-                <div class="value" id="val-house">Baitul Noor</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Place</div>
-                <div class="value" id="val-place">Oorakam</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Post Office</div>
-                <div class="value" id="val-post">Vengara</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Panchayath</div>
-                <div class="value" id="val-panchayath">Oorakam</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">District</div>
-                <div class="value" id="val-district">Malappuram</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">State / Country</div>
-                <div class="value" id="val-state-country">Kerala, India</div>
-            </div>
-
-            <div class="field-group">
-                <div class="label">Pincode</div>
-                <div class="value" id="val-pincode">676519</div>
-            </div>
-
         </div>
 
+        <!-- FORM DATA TABLES -->
+        <table>
+            <!-- 1. Personal Details -->
+            <tr>
+                <td colspan="4" class="section-header">Personal Details</td>
+            </tr>
+            <tr>
+                <th>Hajar/Reg Number</th>
+                <td id="val-hajar"></td>
+                <th>Course Name</th>
+                <td id="val-course"></td>
+            </tr>
+            <tr>
+                <th>Full Name (English)</th>
+                <td id="val-name"></td>
+                <th>Full Name (Arabic)</th>
+                <td id="val-name-ar" dir="rtl"></td>
+            </tr>
+            <tr>
+                <th>Date of Birth</th>
+                <td id="val-dob"></td>
+                <th>Email Address</th>
+                <td id="val-email"></td>
+            </tr>
+            <tr>
+                <th>Mobile Number</th>
+                <td id="val-mobile"></td>
+                <th>WhatsApp Number</th>
+                <td id="val-whatsapp"></td>
+            </tr>
+
+            <!-- 2. Family & Guardian -->
+            <tr>
+                <td colspan="4" class="section-header">Family & Guardian Details</td>
+            </tr>
+            <tr>
+                <th>Father's Name (En)</th>
+                <td id="val-father"></td>
+                <th>Father's Name (Ar)</th>
+                <td id="val-father-ar" dir="rtl"></td>
+            </tr>
+            <tr>
+                <th>Guardian's Name (En)</th>
+                <td id="val-guardian"></td>
+                <th>Guardian's Name (Ar)</th>
+                <td id="val-guardian-ar" dir="rtl"></td>
+            </tr>
+            <tr>
+                <th>Relation</th>
+                <td id="val-relation"></td>
+                <th>Guardian Mobile</th>
+                <td id="val-g-mobile"></td>
+            </tr>
+
+            <!-- 3. Contact Address -->
+            <tr>
+                <td colspan="4" class="section-header">Contact Address</td>
+            </tr>
+            <tr>
+                <th>House Name</th>
+                <td id="val-house"></td>
+                <th>Place / City</th>
+                <td id="val-place"></td>
+            </tr>
+            <tr>
+                <th>Post Office</th>
+                <td id="val-post"></td>
+                <th>Panchayath</th>
+                <td id="val-panchayath"></td>
+            </tr>
+            <tr>
+                <th>District</th>
+                <td id="val-district"></td>
+                <th>State</th>
+                <td id="val-state"></td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td id="val-country"></td>
+                <th>Pincode</th>
+                <td id="val-pincode"></td>
+            </tr>
+
+            <!-- 4. Academic Background (Dars/Previous Islamic) -->
+            <tr>
+                <td colspan="4" class="section-header">Previous Academic Background</td>
+            </tr>
+            <tr>
+                <th>Previous College/Dars</th>
+                <td id="val-prev-coll"></td>
+                <th>College Place</th>
+                <td id="val-coll-place"></td>
+            </tr>
+            <tr>
+                <th>Usthad's Name</th>
+                <td id="val-usthad"></td>
+                <th>Usthad's Mobile</th>
+                <td id="val-u-mobile"></td>
+            </tr>
+
+            <!-- 5. General Education -->
+            <tr>
+                <td colspan="4" class="section-header">General Education</td>
+            </tr>
+            <tr>
+                <th>Course / Program</th>
+                <td id="val-gen-course"></td>
+                <th>Institution Name</th>
+                <td id="val-gen-inst"></td>
+            </tr>
+            <tr>
+                <th>Board / University</th>
+                <td id="val-gen-board"></td>
+                <th>Year of Admission</th>
+                <td id="val-gen-year"></td>
+            </tr>
+            <tr>
+                <th>Status / Semester</th>
+                <td colspan="3" id="val-gen-status"></td>
+            </tr>
+
+            <!-- 6. Organization Representation -->
+            <tr>
+                <td colspan="4" class="section-header">Organization Representation</td>
+            </tr>
+            <tr>
+                <th>Organization Name</th>
+                <td id="val-org-name"></td>
+                <th>Designation</th>
+                <td id="val-org-designation"></td>
+            </tr>
+            <tr>
+                <th>Zone / Division</th>
+                <td id="val-org-zone"></td>
+                <th>Circle / Sector</th>
+                <td id="val-org-circle"></td>
+            </tr>
+            <tr>
+                <th>Area</th>
+                <td id="val-org-area"></td>
+                <th>Unit</th>
+                <td id="val-org-unit"></td>
+            </tr>
+        </table>
+        
+        <!-- Optional Signature Area at the bottom -->
         <div style="margin-top: 50px; display: flex; justify-content: space-between;">
-            <div style="text-align: center; border-top: 1px solid #000; width: 200px; padding-top: 5px;">Applicant Signature</div>
-            <div style="text-align: center; border-top: 1px solid #000; width: 200px; padding-top: 5px;">Parent Signature</div>
+            <div><strong>Date:</strong> _____________________</div>
+            <div><strong>Signature:</strong> _____________________</div>
         </div>
+
     </div>
 
-    <div style="text-align: center; margin-top: 20px;">
-        <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer;">Print Application</button>
-        <button onclick="downloadAsPDF() " style="padding: 10px 20px; cursor: pointer;">Download as PDF</button>
+    <div style="text-align: center; margin-top: 20px;" class="action-buttons">
+        <button onclick="window.print()" class="btn print-btn">Print Application</button>
+        <button onclick="downloadAsPDF()" class="btn pdf-btn">Download as PDF</button>
     </div>
 
         </div>
@@ -363,8 +412,13 @@
         <legend>Personal Details</legend>
         
         <div class="form-group full-width">
+            <div class="label-row"><span>Register Number <span class="requir">*</span></span><span class="ar">تسجيل نمبر</span></div>
+            <input type="text" id="reg_num" placeholder="Register Number" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+        </div>
+        
+        <div class="form-group full-width">
             <div class="label-row"><span>Hajar Number <span class="requir">*</span></span><span class="ar">حاضری نمبر</span></div>
-            <input type="text" id="number" placeholder="Hajar Number" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+            <input type="text" id="hajar_num" placeholder="Hajar Number" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
         </div>
 
         <div class="form-group">
@@ -576,6 +630,48 @@
     </fieldset>
 
 
+    <!-- FIELDSET 4: GENERAL EDUCATION -->
+    <fieldset class="form-grid">
+        <legend>General Education (Highest Level)</legend>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Course/Program<span class="requir"> *</span></span></div>
+            <input type="text" id="gen_course" placeholder="E.g: BCom, BSc, Plus Two, 10th" required>
+        </div>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Institution Name<span class="requir"> *</span></span></div>
+            <input type="text" id="gen_institution" placeholder="College/School Name" required>
+        </div>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Board/University<span class="requir"> *</span></span></div>
+            <input type="text" id="gen_board" placeholder="E.g: CBSE, Kerala State Board, MG University" required>
+        </div>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Year of Admission</span></div>
+            <input type="number" id="gen_admission_year" placeholder="E.g: 2021" min="1900" max="2099">
+        </div>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Status<span class="requir"> *</span></span></div>
+            <select id="gen_status" required onchange="toggleSemesterField()">
+                <option value="" disabled selected>Select Status</option>
+                <option value="Pursuing">Pursuing</option>
+                <option value="Completed">Completed</option>
+                <option value="Dropped out">Dropped out</option>
+            </select>
+        </div>
+
+        <!-- This field is hidden by default and toggled via JavaScript -->
+        <div class="form-group full-width" id="semester_group" style="display: none;">
+            <div class="label-row"><span>Current / Dropped Out Year/Semester<span class="requir"> *</span></span></div>
+            <input type="text" id="gen_semester" placeholder="E.g: 1st year, 2nd semester">
+        </div>
+    </fieldset>
+
+
     <!-- FIELDSET 4: ADDRESS DETAILS -->
     <fieldset class="form-grid">
         <legend>Address Details</legend>
@@ -625,6 +721,41 @@
                 oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
                 title="Pincode must be exactly 6 digits"
             >
+        </div>
+    </fieldset>
+
+    <!-- FIELDSET 5: ORGANIZATION REPRESENTATION -->
+    <fieldset class="form-grid">
+        <legend>Organization Representation</legend>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Organization Name</span></div>
+            <input type="text" id="org_name" placeholder="E.g: SSF, SYS">
+        </div>
+        
+        <div class="form-group full-width">
+            <div class="label-row"><span>Unit</span></div>
+            <input type="text" id="org_unit" placeholder="Unit Name">
+        </div>
+        
+        <div class="form-group full-width">
+            <div class="label-row"><span>Circle / Sector</span></div>
+            <input type="text" id="org_circle" placeholder="Circle or Sector">
+         </div>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Zone / Division</span></div>
+            <input type="text" id="org_zone" placeholder="Zone or Division">
+        </div>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Level of Working</span></div>
+            <input type="text" id="org_area" placeholder="E.g: Unit, Sector">
+        </div>
+
+        <div class="form-group full-width">
+            <div class="label-row"><span>Designation</span></div>
+            <input type="text" id="org_designation" placeholder="E.g: Member, Secretary, President">
         </div>
     </fieldset>
 
@@ -695,7 +826,7 @@
      * 1. GLOBAL CONFIGURATION & DATA
      * ==============================
      */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuSwzbdiufnqrDHTxVw7LY7B3GW4e7Bcse0EZPjYWCL0AGBkvKNakagZBBQyDllhCgkw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxHSLhkqJ6udmpetbfuvKAwB2s_s_Pdg9sCZkZ2WzaUnHp92D8APJgDBPTel_g4fs97sw/exec";
     const GUIDE_W = 240;
     const GUIDE_H = 320;
 
@@ -813,7 +944,27 @@ function toggleOther(isOther) {
 
     /** 
      * ==============================
-     * 5. CROPPER LOGIC
+     * 5. emester Field Toggle Logic
+     * ==============================
+     */
+        function toggleSemesterField() {
+            const statusSelect = document.getElementById('gen_status');
+            const semesterGroup = document.getElementById('semester_group');
+            const semesterInput = document.getElementById('gen_semester');
+
+            if (statusSelect.value === 'Pursuing' || statusSelect.value === 'Dropped out') {
+                semesterGroup.style.display = 'block';
+                semesterInput.required = true; // Make it required when visible
+            } else {
+                semesterGroup.style.display = 'none';
+                semesterInput.required = false; // Remove requirement when hidden
+                semesterInput.value = ''; // Clear the input if hidden
+            }
+        }
+    
+    /** 
+     * ==============================
+     * 6. CROPPER LOGIC
      * ==============================
      */
     function getMinScale() {
@@ -923,7 +1074,7 @@ function toggleOther(isOther) {
 
     /** 
      * ==============================
-     * 6. MAIN SUBMIT HANDLER
+     * 7. MAIN SUBMIT HANDLER
      * ==============================
      */
     document.getElementById('regForm').addEventListener('submit', (e) => {
@@ -944,7 +1095,8 @@ function toggleOther(isOther) {
         // ============================================================
         
         // --- 1. Personal Details ---
-        const hajarNumber = document.getElementById('number').value;
+        const regNumber = document.getElementById('reg_num').value;
+        const hajarNumber = document.getElementById('hajar_num').value;
         const fullNameEn = document.getElementById('name_en').value.toUpperCase();
         const fullNameAr = document.getElementById('name_ar').value;
         const dob = document.getElementById('dob').value;
@@ -969,7 +1121,15 @@ function toggleOther(isOther) {
         const usthadName = document.getElementById('usthad_name').value.toUpperCase();
         const usthadMobileFull = document.getElementById('country-code-usthad').value + "" + document.getElementById('mobile_usthad').value;
 
-        // --- 4. Address & Location ---
+        // --- 4. General Education ---
+        const genCourse = document.getElementById('gen_course').value.toUpperCase();   
+        const genInstitution = document.getElementById('gen_institution').value.toUpperCase();
+        const genBoard = document.getElementById('gen_board').value.toUpperCase();
+        const genAdmissionYear = document.getElementById('gen_admission_year').value;
+        const genStatus = document.getElementById('gen_status').value;
+        const genSemester = document.getElementById('gen_semester').value.toUpperCase();
+        
+        // --- 5. Address & Location ---
         const houseName = document.getElementById('house-name').value.toUpperCase();
         const place = document.getElementById('place_en').value.toUpperCase();
         const post = document.getElementById('post').value.toUpperCase();
@@ -979,10 +1139,18 @@ function toggleOther(isOther) {
         const state = document.getElementById('state').value;
         const district = document.getElementById('district').value;
         const pincode = document.getElementById('pincode').value;
-        
+
+        // --- 5. Organization Representation ---
+        const orgName = document.getElementById('org_name').value.toUpperCase();
+        const orgUnit = document.getElementById('org_unit').value.toUpperCase();
+        const orgCircle = document.getElementById('org_circle').value.toUpperCase();
+        const orgZone = document.getElementById('org_zone').value.toUpperCase();
+        const orgArea = document.getElementById('org_area').value.toUpperCase();
+        const orgDesignation = document.getElementById('org_designation').value.toUpperCase();
+
         const course = document.getElementById('course').value;
 
-        // --- 5. Photo Data ---
+        // --- 6. Photo Data ---
         const photoData = document.getElementById('finalData').value;
 
         // ============================================================
@@ -996,7 +1164,7 @@ function toggleOther(isOther) {
     if(document.getElementById('photo-preview-form')) document.getElementById('photo-preview-form').src = photoData;
 
     // Personal Details
-    if(document.getElementById('val-hajar')) document.getElementById('val-hajar').innerText = hajarNumber;
+    if(document.getElementById('val-hajar')) document.getElementById('val-hajar').innerText = hajarNumber+"/"+regNumber;
     if(document.getElementById('val-course')) document.getElementById('val-course').innerText = course;
     if(document.getElementById('val-name')) document.getElementById('val-name').innerText = fullNameEn;
     if(document.getElementById('val-name-ar')) document.getElementById('val-name-ar').innerText = fullNameAr;
@@ -1019,14 +1187,32 @@ function toggleOther(isOther) {
     if(document.getElementById('val-usthad')) document.getElementById('val-usthad').innerText = usthadName;
     if(document.getElementById('val-u-mobile')) document.getElementById('val-u-mobile').innerText = usthadMobileFull;
 
+    // General Education
+    if(document.getElementById('val-gen-course')) document.getElementById('val-gen-course').innerText = genCourse;
+    if(document.getElementById('val-gen-inst')) document.getElementById('val-gen-inst').innerText = genInstitution;
+    if(document.getElementById('val-gen-board')) document.getElementById('val-gen-board').innerText = genBoard;
+    if(document.getElementById('val-gen-year')) document.getElementById('val-gen-year').innerText = genAdmissionYear;
+    if(document.getElementById('val-gen-status')) document.getElementById('val-gen-status').innerText = genStatus + (genSemester ? " - " + genSemester : "");
+
     // Contact Address
     if(document.getElementById('val-house')) document.getElementById('val-house').innerText = houseName;
     if(document.getElementById('val-place')) document.getElementById('val-place').innerText = place;
     if(document.getElementById('val-post')) document.getElementById('val-post').innerText = post;
     if(document.getElementById('val-panchayath')) document.getElementById('val-panchayath').innerText = panchayath;
     if(document.getElementById('val-district')) document.getElementById('val-district').innerText = district;
-    if(document.getElementById('val-state-country')) document.getElementById('val-state-country').innerText = state + ", " + country;
+    if(document.getElementById('val-state')) document.getElementById('val-state').innerText = state;
+    if(document.getElementById('val-country')) document.getElementById('val-country').innerText = country;
     if(document.getElementById('val-pincode')) document.getElementById('val-pincode').innerText = pincode;
+
+    // Organization Representation
+    if(document.getElementById('val-org-name')) document.getElementById('val-org-name').innerText = orgName;
+    if(document.getElementById('val-org-unit')) document.getElementById('val-org-unit').innerText = orgUnit;
+    if(document.getElementById('val-org-circle')) document.getElementById('val-org-circle').innerText = orgCircle;
+    if(document.getElementById('val-org-zone')) document.getElementById('val-org-zone').innerText = orgZone;
+    if(document.getElementById('val-org-area')) document.getElementById('val-org-area').innerText = orgArea;
+    if(document.getElementById('val-org-designation')) document.getElementById('val-org-designation').innerText = orgDesignation;
+
+    if(document.getElementById('val-course')) document.getElementById('val-course').innerText = course;
         } catch(err) { console.log("Preview update skipped"); }
 
 
@@ -1069,9 +1255,10 @@ switch (course) {
     courseCode = "UNKNOWN";
 }
 
-        const fileName = `${courseCode}${hajarNumber}.png`;
+        const fileName = `${regNumber}.png`;
 
         const formData = {
+            reg_number: regNumber,
             hajar_number: hajarNumber,
             name_en: fullNameEn,
             name_ar: fullNameAr,
@@ -1093,6 +1280,13 @@ switch (course) {
             usthad_name: usthadName,
             usthad_mobile: usthadMobileFull,
 
+            gen_course: genCourse,
+            gen_institution: genInstitution,
+            gen_board: genBoard,
+            gen_admission_year: genAdmissionYear,
+            gen_status: genStatus,
+            gen_semester: genSemester,
+
             house_name: houseName,
             place: place,
             post: post,
@@ -1101,6 +1295,13 @@ switch (course) {
             state: state,
             country: country,
             pincode: pincode,
+
+            org_name: orgName,
+            org_unit: orgUnit,
+            org_circle: orgCircle,
+            org_zone: orgZone,
+            org_area: orgArea,
+            org_designation: orgDesignation,
             
             course: course,
 
